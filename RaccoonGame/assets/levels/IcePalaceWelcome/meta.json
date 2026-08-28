@@ -1,0 +1,20 @@
+{
+  "name": "IcePalaceWelcome",
+  "author": "",
+  "version": 1,
+  "width": 320,
+  "height": 45,
+  "bgm": "",
+  "bgImages": [
+    "ice_palace.png"
+  ],
+  "bgSpeeds": [
+    0.25
+  ],
+  "tileset": "ice_palace",
+  "spawnPoint": {
+    "x": 0,
+    "y": 0
+  },
+  "hasSpawnPoint": true
+}

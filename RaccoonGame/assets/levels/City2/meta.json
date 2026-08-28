@@ -1,0 +1,16 @@
+{
+  "name": "City2",
+  "author": "Dean",
+  "version": 1,
+  "width": 152,
+  "height": 23,
+  "bgm": "GasterTest",
+  "bgImages": [],
+  "bgSpeeds": [],
+  "tileset": "bricks",
+  "spawnPoint": {
+    "x": 0,
+    "y": 0
+  },
+  "hasSpawnPoint": false
+}

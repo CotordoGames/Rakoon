@@ -1,0 +1,165 @@
+[
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 320,
+    "width": 264,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 408,
+    "y": 496,
+    "width": 208,
+    "height": 224
+  },
+  {
+    "name": "solid_rect",
+    "x": 688,
+    "y": 512,
+    "width": 72,
+    "height": 208
+  },
+  {
+    "name": "solid_rect",
+    "x": 816,
+    "y": 488,
+    "width": 80,
+    "height": 136
+  },
+  {
+    "name": "solid_rect",
+    "x": 864,
+    "y": 624,
+    "width": 32,
+    "height": 72
+  },
+  {
+    "name": "solid_rect",
+    "x": 816,
+    "y": 696,
+    "width": 80,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 672,
+    "width": 120,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 288,
+    "y": 352,
+    "width": 136,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 952,
+    "y": 232,
+    "width": 328,
+    "height": 200
+  },
+  {
+    "name": "solid_rect",
+    "x": 1064,
+    "y": 432,
+    "width": 216,
+    "height": 112
+  },
+  {
+    "name": "solid_rect",
+    "x": 952,
+    "y": 592,
+    "width": 224,
+    "height": 128
+  },
+  {
+    "name": "solid_rect",
+    "x": 952,
+    "y": 480,
+    "width": 72,
+    "height": 112
+  },
+  {
+    "name": "solid_rect",
+    "x": 1176,
+    "y": 640,
+    "width": 104,
+    "height": 80
+  },
+  {
+    "name": "solid_rect",
+    "x": 1024,
+    "y": 544,
+    "width": 24,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 1272,
+    "y": 544,
+    "width": 8,
+    "height": 96
+  },
+  {
+    "name": "solid_rect",
+    "x": 464,
+    "y": 368,
+    "width": 48,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 504,
+    "y": 408,
+    "width": 48,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 472,
+    "y": 456,
+    "width": 48,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 288,
+    "y": 512,
+    "width": 64,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 200,
+    "y": 560,
+    "width": 56,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 248,
+    "y": 608,
+    "width": 48,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 184,
+    "y": 648,
+    "width": 48,
+    "height": 8
+  },
+  {
+    "name": "door",
+    "x": 32,
+    "y": 656,
+    "width": 0,
+    "height": 0,
+    "room": "level1",
+    "DoorId": "ToOpen"
+  }
+]

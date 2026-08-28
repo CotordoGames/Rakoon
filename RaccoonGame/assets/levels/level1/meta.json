@@ -1,0 +1,24 @@
+{
+  "name": "level1",
+  "author": "Dean",
+  "version": 1,
+  "width": 324,
+  "height": 31,
+  "bgm": "deathMarch",
+  "bgImages": [
+    "bg-city-layer1.png",
+    "bg-city-layer2.png",
+    "bg-city-layer3.png"
+  ],
+  "bgSpeeds": [
+    0.2,
+    0.3,
+    0.5
+  ],
+  "tileset": "bricks",
+  "spawnPoint": {
+    "x": 36,
+    "y": 212
+  },
+  "hasSpawnPoint": true
+}

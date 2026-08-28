@@ -1,0 +1,562 @@
+[
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 0,
+    "width": 128,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 24,
+    "width": 24,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 56,
+    "width": 88,
+    "height": 216
+  },
+  {
+    "name": "solid_rect",
+    "x": 88,
+    "y": 56,
+    "width": 40,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 88,
+    "y": 104,
+    "width": 24,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 320,
+    "width": 112,
+    "height": 40
+  },
+  {
+    "name": "solid_rect",
+    "x": 88,
+    "y": 168,
+    "width": 40,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 144,
+    "y": 200,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 104,
+    "y": 240,
+    "width": 24,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 128,
+    "y": 280,
+    "width": 24,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 176,
+    "y": 144,
+    "width": 224,
+    "height": 72
+  },
+  {
+    "name": "solid_rect",
+    "x": 176,
+    "y": 256,
+    "width": 176,
+    "height": 40
+  },
+  {
+    "name": "solid_rect",
+    "x": 176,
+    "y": 336,
+    "width": 288,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 352,
+    "y": 272,
+    "width": 16,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 368,
+    "y": 304,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 400,
+    "y": 320,
+    "width": 64,
+    "height": 16
+  },
+  {
+    "name": "solid_rect",
+    "x": 368,
+    "y": 288,
+    "width": 16,
+    "height": 16
+  },
+  {
+    "name": "solid_rect",
+    "x": 304,
+    "y": 296,
+    "width": 48,
+    "height": 40
+  },
+  {
+    "name": "solid_rect",
+    "x": 464,
+    "y": 320,
+    "width": 120,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 464,
+    "y": 216,
+    "width": 120,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 480,
+    "y": 152,
+    "width": 88,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 584,
+    "y": 320,
+    "width": 56,
+    "height": 40
+  },
+  {
+    "name": "solid_rect",
+    "x": 616,
+    "y": 168,
+    "width": 216,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 616,
+    "y": 200,
+    "width": 72,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 688,
+    "y": 280,
+    "width": 24,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 768,
+    "y": 248,
+    "width": 72,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 840,
+    "y": 248,
+    "width": 120,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 736,
+    "y": 320,
+    "width": 24,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 744,
+    "y": 344,
+    "width": 112,
+    "height": 16
+  },
+  {
+    "name": "solid_rect",
+    "x": 760,
+    "y": 336,
+    "width": 96,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 928,
+    "y": 336,
+    "width": 296,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 1040,
+    "y": 168,
+    "width": 112,
+    "height": 144
+  },
+  {
+    "name": "solid_rect",
+    "x": 992,
+    "y": 216,
+    "width": 48,
+    "height": 96
+  },
+  {
+    "name": "solid_rect",
+    "x": 960,
+    "y": 248,
+    "width": 32,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 1024,
+    "y": 184,
+    "width": 16,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 1008,
+    "y": 200,
+    "width": 16,
+    "height": 16
+  },
+  {
+    "name": "solid_rect",
+    "x": 976,
+    "y": 232,
+    "width": 16,
+    "height": 16
+  },
+  {
+    "name": "solid_rect",
+    "x": 1056,
+    "y": 0,
+    "width": 80,
+    "height": 144
+  },
+  {
+    "name": "solid_rect",
+    "x": 1136,
+    "y": 0,
+    "width": 16,
+    "height": 104
+  },
+  {
+    "name": "solid_rect",
+    "x": 1248,
+    "y": 304,
+    "width": 200,
+    "height": 56
+  },
+  {
+    "name": "solid_rect",
+    "x": 1320,
+    "y": 256,
+    "width": 88,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 1192,
+    "y": 144,
+    "width": 64,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1288,
+    "y": 120,
+    "width": 72,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1416,
+    "y": 128,
+    "width": 128,
+    "height": 16
+  },
+  {
+    "name": "solid_rect",
+    "x": 184,
+    "y": 40,
+    "width": 80,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 304,
+    "y": 56,
+    "width": 80,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 440,
+    "y": 72,
+    "width": 80,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 552,
+    "y": 72,
+    "width": 112,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 696,
+    "y": 96,
+    "width": 80,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 816,
+    "y": 120,
+    "width": 64,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 912,
+    "y": 144,
+    "width": 72,
+    "height": 8
+  },
+  {
+    "name": "door",
+    "x": 24,
+    "y": 304,
+    "room": "level1",
+    "DoorId": "IcePalaceOne"
+  },
+  {
+    "name": "solid_rect",
+    "x": 1416,
+    "y": 0,
+    "width": 128,
+    "height": 56
+  },
+  {
+    "name": "solid_rect",
+    "x": 1632,
+    "y": 120,
+    "width": 104,
+    "height": 80
+  },
+  {
+    "name": "solid_rect",
+    "x": 1944,
+    "y": 56,
+    "width": 48,
+    "height": 112
+  },
+  {
+    "name": "solid_rect",
+    "x": 1896,
+    "y": 120,
+    "width": 48,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 1984,
+    "y": 168,
+    "width": 8,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 1992,
+    "y": 136,
+    "width": 568,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 2200,
+    "y": 88,
+    "width": 104,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 2184,
+    "y": 104,
+    "width": 16,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 2168,
+    "y": 120,
+    "width": 16,
+    "height": 16
+  },
+  {
+    "name": "solid_rect",
+    "x": 2304,
+    "y": 128,
+    "width": 256,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2544,
+    "y": 32,
+    "width": 16,
+    "height": 96
+  },
+  {
+    "name": "solid_rect",
+    "x": 2144,
+    "y": 0,
+    "width": 416,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 2048,
+    "y": 0,
+    "width": 96,
+    "height": 80
+  },
+  {
+    "name": "solid_rect",
+    "x": 1944,
+    "y": 0,
+    "width": 104,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1520,
+    "y": 304,
+    "width": 64,
+    "height": 56
+  },
+  {
+    "name": "solid_rect",
+    "x": 1632,
+    "y": 264,
+    "width": 104,
+    "height": 96
+  },
+  {
+    "name": "solid_rect",
+    "x": 1784,
+    "y": 280,
+    "width": 88,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1912,
+    "y": 256,
+    "width": 32,
+    "height": 104
+  },
+  {
+    "name": "solid_rect",
+    "x": 1944,
+    "y": 312,
+    "width": 64,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1992,
+    "y": 336,
+    "width": 72,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 2064,
+    "y": 336,
+    "width": 96,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2160,
+    "y": 312,
+    "width": 88,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 2320,
+    "y": 296,
+    "width": 104,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 1984,
+    "y": 232,
+    "width": 216,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 2128,
+    "y": 200,
+    "width": 72,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 2200,
+    "y": 200,
+    "width": 360,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 2544,
+    "y": 224,
+    "width": 16,
+    "height": 136
+  },
+  {
+    "name": "solid_rect",
+    "x": 1736,
+    "y": 120,
+    "width": 160,
+    "height": 8
+  }
+]

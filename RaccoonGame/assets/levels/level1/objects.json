@@ -1,0 +1,185 @@
+[
+  {
+    "name": "solid_rect",
+    "x": 192,
+    "y": 208,
+    "width": 64,
+    "height": 40
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 216,
+    "width": 128,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 0,
+    "width": 112,
+    "height": 168
+  },
+  {
+    "name": "solid_rect",
+    "x": 272,
+    "y": 160,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 344,
+    "y": 128,
+    "width": 80,
+    "height": 120
+  },
+  {
+    "name": "solid_rect",
+    "x": 496,
+    "y": 152,
+    "width": 80,
+    "height": 96
+  },
+  {
+    "name": "solid_rect",
+    "x": 624,
+    "y": 200,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 704,
+    "y": 160,
+    "width": 128,
+    "height": 88
+  },
+  {
+    "name": "solid_rect",
+    "x": 904,
+    "y": 160,
+    "width": 64,
+    "height": 88
+  },
+  {
+    "name": "solid_rect",
+    "x": 1024,
+    "y": 120,
+    "width": 64,
+    "height": 128
+  },
+  {
+    "name": "solid_rect",
+    "x": 1152,
+    "y": 192,
+    "width": 128,
+    "height": 56
+  },
+  {
+    "name": "solid_rect",
+    "x": 1088,
+    "y": 176,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1344,
+    "y": 168,
+    "width": 40,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1416,
+    "y": 136,
+    "width": 56,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1536,
+    "y": 112,
+    "width": 64,
+    "height": 136
+  },
+  {
+    "name": "solid_rect",
+    "x": 1600,
+    "y": 168,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 1688,
+    "y": 192,
+    "width": 48,
+    "height": 56
+  },
+  {
+    "name": "solid_rect",
+    "x": 1792,
+    "y": 160,
+    "width": 128,
+    "height": 88
+  },
+  {
+    "name": "solid_rect",
+    "x": 1960,
+    "y": 128,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2048,
+    "y": 112,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2128,
+    "y": 0,
+    "width": 112,
+    "height": 80
+  },
+  {
+    "name": "solid_rect",
+    "x": 2112,
+    "y": 120,
+    "width": 384,
+    "height": 128
+  },
+  {
+    "name": "door",
+    "x": 776,
+    "y": 144,
+    "DoorId": "IcePalaceOne",
+    "room": "IcePalaceWelcome"
+  },
+  {
+    "name": "solid_rect",
+    "x": 2560,
+    "y": 0,
+    "width": 32,
+    "height": 248
+  },
+  {
+    "name": "text",
+    "x": 128,
+    "y": 128,
+    "text": "this is a text object",
+    "width": 64,
+    "height": 32
+  },
+  {
+    "name": "door",
+    "x": 2176,
+    "y": 104,
+    "DoorId": "Room1Exit",
+    "room": "City2"
+  }
+]

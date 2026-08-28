@@ -1,0 +1,100 @@
+[
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 184
+  },
+  {
+    "name": "solid_rect",
+    "x": 64,
+    "y": 96,
+    "width": 64,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 192,
+    "y": 112,
+    "width": 48,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 288,
+    "y": 128,
+    "width": 64,
+    "height": 56
+  },
+  {
+    "name": "solid_rect",
+    "x": 400,
+    "y": 120,
+    "width": 32,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 480,
+    "y": 128,
+    "width": 32,
+    "height": 56
+  },
+  {
+    "name": "solid_rect",
+    "x": 568,
+    "y": 128,
+    "width": 80,
+    "height": 56
+  },
+  {
+    "name": "solid_rect",
+    "x": 568,
+    "y": 0,
+    "width": 80,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 728,
+    "y": 128,
+    "width": 80,
+    "height": 56
+  },
+  {
+    "name": "solid_rect",
+    "x": 728,
+    "y": 0,
+    "width": 80,
+    "height": 72
+  },
+  {
+    "name": "solid_rect",
+    "x": 872,
+    "y": 112,
+    "width": 112,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1056,
+    "y": 128,
+    "width": 160,
+    "height": 56
+  },
+  {
+    "name": "solid_rect",
+    "x": 1056,
+    "y": 0,
+    "width": 160,
+    "height": 64
+  },
+  {
+    "name": "door",
+    "x": 600,
+    "y": 112,
+    "DoorId": "Room1Exit",
+    "room": "level1"
+  }
+]

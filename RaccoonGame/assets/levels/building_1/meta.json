@@ -1,0 +1,21 @@
+{
+  "name": "building 1",
+  "author": "dean",
+  "version": 1,
+  "width": 40,
+  "height": 46,
+  "bgm": "",
+  "bgImages": [
+    "bricc.png"
+  ],
+  "bgSpeeds": [
+    0.217,
+    0
+  ],
+  "tileset": "bricks",
+  "spawnPoint": {
+    "x": 0,
+    "y": 0
+  },
+  "hasSpawnPoint": false
+}

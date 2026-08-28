@@ -1,0 +1,23 @@
+[
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 200,
+    "width": 320,
+    "height": 40
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 0,
+    "width": 80,
+    "height": 120
+  },
+  {
+    "name": "solid_rect",
+    "x": 240,
+    "y": 0,
+    "width": 80,
+    "height": 120
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "name": "Castle",
+  "author": "",
+  "version": 1,
+  "width": 40,
+  "height": 30,
+  "bgm": "Castle",
+  "bgImages": [],
+  "bgSpeeds": [],
+  "tileset": "bricks",
+  "spawnPoint": {
+    "x": 0,
+    "y": 0
+  },
+  "hasSpawnPoint": true
+}
