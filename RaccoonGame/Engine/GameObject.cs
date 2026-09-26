@@ -13,6 +13,8 @@ public abstract class GameObject
     public Vector2 Size;
     public Vector2 ColliderOffset;
     public bool IsGrounded = false;
+    public bool IsTouchingWallLeft = false;
+    public bool IsTouchingWallRight = false;
     public List<GameObject> CurrentlyColliding = new List<GameObject>();
     public int DrawOrder = 0;
 
@@ -35,10 +37,10 @@ public abstract class GameObject
 
     //the collider
     public Rectangle BoundingBox => new Rectangle(
-            (int)Position.X + (int)ColliderOffset.X,
-            (int)Position.Y + (int)ColliderOffset.Y,
-            (int)ColliderSize.X,
-            (int)ColliderSize.Y
+            Position.X + ColliderOffset.X,
+            Position.Y + ColliderOffset.Y,
+            ColliderSize.X,
+            ColliderSize.Y
         );
 
 
@@ -48,5 +50,19 @@ public abstract class GameObject
     //functions that the object uses to change itself
     public abstract void Start();
     public abstract void Update(float deltaTime);
+
+    public static bool TryGetPropertyCI(JsonElement json, string name, out JsonElement value)
+    {
+        foreach(var prop in json.EnumerateObject())
+        {
+            if(string.Equals(prop.Name, name, System.StringComparison.OrdinalIgnoreCase))
+            {
+                value = prop.Value;
+                return true;
+            }
+        }
+        value = default;
+        return false;
+    }
 }
 

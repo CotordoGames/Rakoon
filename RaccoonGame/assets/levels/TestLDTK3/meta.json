@@ -1,0 +1,16 @@
+{
+  "name": "TestLDTK3",
+  "author": "",
+  "version": 1,
+  "width": 40,
+  "height": 32,
+  "bgm": "",
+  "bgImages": [],
+  "bgSpeeds": [],
+  "tileset": "bricks",
+  "spawnPoint": {
+    "x": 8,
+    "y": 208
+  },
+  "hasSpawnPoint": true
+}

@@ -13,7 +13,19 @@ public static class ObjectRegistry
         //dore
         ["door"] = () => new Door(),
 
-        ["text"] = () => new HUDTest()
+        ["text"] = () => new HUDTest(),
+
+        ["NPC"] = () => new NPC(),
+
+        ["npc"] = () => new NPC(),
+
+        ["camera_zone"] = () => new CameraZone(),
+
+        ["semisolid_rect"] = () => new SemiSolidRect(),
+
+        ["ladder"] = () => new Ladder(),
+
+        ["spring"] = () => new Spring(),
     };
 
     public static GameObject? Create(string name) =>

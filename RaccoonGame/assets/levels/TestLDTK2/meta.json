@@ -1,0 +1,26 @@
+{
+  "name": "TestLDTK2",
+  "author": "",
+  "version": 1,
+  "width": 80,
+  "height": 160,
+  "bgm": "",
+  "bgImages": [
+    "ice_palace.png"
+  ],
+  "bgSpeeds": [
+    0.25
+  ],
+  "tileset": "ice_palace",
+  "spawnPoint": {
+    "x": 32,
+    "y": 1232
+  },
+  "bgOffsets": [
+    {
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "hasSpawnPoint": true
+}

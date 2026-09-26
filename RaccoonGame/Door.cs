@@ -26,9 +26,11 @@ public class Door : GameObject
 
     public override void Update(float deltaTime)
     {
+        if (!LevelManager.CanEnterDoor) return;
+
         foreach(var obj in CurrentlyColliding)
         {
-            if(obj is Player && Raylib.IsKeyPressed(KeyboardKey.Up))
+            if(obj is Autumn && Raylib.IsKeyPressed(KeyboardKey.Up))
             {
                 LevelManager.RequestTransition(Room, DoorId);
                 break;

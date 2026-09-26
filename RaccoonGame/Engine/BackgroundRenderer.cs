@@ -13,6 +13,7 @@ public static class BackgroundRenderer
         for (int i = 0; i < textures.Count; i++)
         {
             float speed = level.BGSpeeds[i];
+            Vector2 offset = level.BGOffsets[i];
             var tex = textures[i];
             
 
@@ -31,13 +32,13 @@ public static class BackgroundRenderer
                 for(float x = startX; x < screenW; x += tex.Width)
                 {
                     //fill up the screen and keep going
-                    DrawColumn(tex, x, offsetY, tileY, screenH);
+                    DrawColumn(tex, x + offset.X, offsetY - offset.Y, tileY, screenH);
                 }
             }
             else
             {
                 //just fill up the screen
-                DrawColumn(tex, -offsetX, offsetY, tileY, screenH);
+                DrawColumn(tex, -offsetX + offset.X, offsetY - offset.Y, tileY, screenH);
             }
         }
     }

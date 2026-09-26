@@ -12,5 +12,11 @@
     "x": 0,
     "y": 0
   },
+  "bgOffsets": [
+    {
+      "x": 0,
+      "y": 0
+    }
+  ],
   "hasSpawnPoint": false
 }

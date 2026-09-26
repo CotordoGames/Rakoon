@@ -47,10 +47,14 @@ class AnimatedSprite2D : Drawable
         playing = true;
     }
 
+
+    //update; runs every frame, in this case 60 time a second
     public override void Update(float deltaTime)
     {
+        //if there is no current sprite, skip drawing alltogether
         if (current == null || !playing) return;
 
+        //update the animations frame depending
         frameTimer += deltaTime;
         if(frameTimer >= current.FrameTime)
         {
@@ -74,6 +78,7 @@ class AnimatedSprite2D : Drawable
         int row = frame / Columns;
 
         float srcW = FlipX ? -FrameWidth : FrameWidth;
+        float srcH = FlipY ? -FrameHeight : FrameHeight;
         Rectangle src = new Rectangle(col * FrameWidth, row * FrameHeight, srcW, FrameHeight);
         Rectangle dest = new Rectangle(position.X, position.Y, size.X, size.Y);
 

@@ -8,7 +8,7 @@ public class GameCamera
 {
     public Vector2 Position; //top left of view in pixel space
     public int ViewWidth, ViewHeight;
-    public float Smoothing = 1.0f;
+    public Vector2 Smoothing = new Vector2(0.125f, 0.1f);
 
     //what the camera follows and how smoothed it is
     GameObject? target;
@@ -31,17 +31,46 @@ public class GameCamera
         levelPixelHeight = levelHeightTiles * tileSize;
     }
 
-    //updates; runs every frame
+
+    //current offset(that gets set as a result of camera zones)
+    public Vector2 PersistantOffset = Vector2.Zero;
+
+    //a set of camera zones which can currently be interacted with
+    HashSet<CameraZone> activeZones = new HashSet<CameraZone>();
     public void Update(float deltaTime)
     {
-        //doesnt need to update if theres nothing to follow
-        if (target == null) return;
+        //if theres nothing to follow, dont update
+        if(target == null)
+        {
+            return;
+        }
 
         //get the center of the target
         Vector2 targetCenter = target.Position + target.Size / 2.0f;
 
         //where the camera wants to go
-        Vector2 desired = targetCenter - new Vector2(ViewWidth / 2.0f, ViewHeight / 2.0f);
+        Vector2 desired = targetCenter - new Vector2(ViewWidth / 2.0f, ViewHeight / 2.0f) + PersistantOffset;
+
+        //add any zones whgich have become active to the list of zones we check
+        var currentZones = new HashSet<CameraZone>();
+        foreach(var zone in ObjectManager.CameraZones)
+        {
+            if (zone.Active && Raylib.CheckCollisionPointRec(targetCenter, zone.BoundingBox))
+            {
+                currentZones.Add(zone);
+            }
+        }
+
+        //check how we are interacting with the zones
+        foreach (var zone in currentZones) if (!activeZones.Contains(zone)) zone.OnEnter(this);
+        foreach (var zone in activeZones) if (!currentZones.Contains(zone)) zone.OnExit();
+        activeZones = currentZones;
+
+        //apply the effects of any zones we interact with
+        foreach (var zone in activeZones)
+        {
+            zone.Apply(this, target, ref desired);
+        }
 
         //make sure the camera never leaves the bounds of the level
         float maxX = Math.Max(0, levelPixelWidth - ViewWidth);
@@ -50,7 +79,9 @@ public class GameCamera
         desired.Y = Math.Clamp(desired.Y, 0, maxY);
 
         //update the position
-        Position = Vector2.Round(Vector2.Lerp(Position, desired, Smoothing * deltaTime * 60));
+        Position = new Vector2(
+            float.Lerp(Position.X, desired.X, Smoothing.X * deltaTime * 60),
+            float.Lerp(Position.Y, desired.Y, Smoothing.Y * deltaTime * 60));
     }
 
     //get the viewports transform
@@ -59,7 +90,7 @@ public class GameCamera
     //the actual camera
     public Camera2D RaylibCamera => new Camera2D
     {
-        Target = Position,
+        Target = Vector2.Round(Position),
         Offset = Vector2.Zero,
         Rotation = 0.0f,
         Zoom = 1f

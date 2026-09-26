@@ -1,0 +1,61 @@
+[
+  {
+    "name": "npc",
+    "x": 256,
+    "y": 128,
+    "width": 16,
+    "height": 16,
+    "flipX": true,
+    "text": [
+      "hello! I am an NPC using the sprite \u0022cubon.png\u0022 and with my X flipped!",
+      "this level is big, but empty, because this is just to show off LDtk\u0027s format."
+    ],
+    "speeds": [
+      0.36,
+      0.36
+    ],
+    "portraits": [
+      2,
+      2
+    ],
+    "openingAnimation": true,
+    "sprite": "cubon.png"
+  },
+  {
+    "name": "door",
+    "x": 48,
+    "y": 144,
+    "width": 16,
+    "height": 16,
+    "room": "level1",
+    "DoorId": "EnterCastle"
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 0,
+    "width": 136,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 48,
+    "width": 8,
+    "height": 112
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 160,
+    "width": 136,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 200,
+    "y": 144,
+    "width": 96,
+    "height": 48
+  }
+]

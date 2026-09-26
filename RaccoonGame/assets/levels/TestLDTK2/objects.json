@@ -1,0 +1,342 @@
+[
+  {
+    "name": "camera_zone",
+    "x": 0,
+    "y": 512,
+    "width": 320,
+    "height": 768,
+    "offsetX": "",
+    "offsetY": -16,
+    "borderX": true,
+    "borderY": true
+  },
+  {
+    "name": "camera_zone",
+    "x": 320,
+    "y": 512,
+    "width": 320,
+    "height": 768,
+    "offsetX": "",
+    "offsetY": -16,
+    "borderX": true,
+    "borderY": true
+  },
+  {
+    "name": "camera_zone",
+    "x": 0,
+    "y": 256,
+    "width": 640,
+    "height": 256,
+    "offsetX": 0,
+    "offsetY": 0,
+    "borderX": true,
+    "borderY": true
+  },
+  {
+    "name": "camera_zone",
+    "x": 0,
+    "y": 0,
+    "width": 320,
+    "height": 256,
+    "offsetX": 0,
+    "offsetY": 0,
+    "borderX": true,
+    "borderY": false
+  },
+  {
+    "name": "camera_zone",
+    "x": 320,
+    "y": 0,
+    "width": 320,
+    "height": 256,
+    "offsetX": 0,
+    "offsetY": 0,
+    "borderX": true,
+    "borderY": false
+  },
+  {
+    "name": "solid_rect",
+    "x": 256,
+    "y": 1152,
+    "width": 128,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 256,
+    "y": 1264,
+    "width": 128,
+    "height": 16
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 1248,
+    "width": 96,
+    "height": 32
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 120,
+    "y": 1200,
+    "width": 80,
+    "height": 8
+  },
+  {
+    "name": "ladder",
+    "x": 32,
+    "y": 960,
+    "width": 8,
+    "height": 96
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 8,
+    "y": 960,
+    "width": 88,
+    "height": 8
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 192,
+    "y": 888,
+    "width": 224,
+    "height": 8
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 448,
+    "y": 1184,
+    "width": 64,
+    "height": 8
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 128,
+    "y": 1120,
+    "width": 96,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 8,
+    "y": 1056,
+    "width": 88,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 448,
+    "y": 832,
+    "width": 184,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 576,
+    "y": 1216,
+    "width": 56,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 448,
+    "y": 1248,
+    "width": 96,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 8,
+    "width": 8,
+    "height": 1240
+  },
+  {
+    "name": "solid_rect",
+    "x": 632,
+    "y": 8,
+    "width": 8,
+    "height": 1272
+  },
+  {
+    "name": "solid_rect",
+    "x": 0,
+    "y": 0,
+    "width": 640,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 8,
+    "y": 608,
+    "width": 536,
+    "height": 160
+  },
+  {
+    "name": "solid_rect",
+    "x": 8,
+    "y": 560,
+    "width": 40,
+    "height": 48
+  },
+  {
+    "name": "solid_rect",
+    "x": 48,
+    "y": 576,
+    "width": 64,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 112,
+    "y": 592,
+    "width": 64,
+    "height": 16
+  },
+  {
+    "name": "solid_rect",
+    "x": 96,
+    "y": 480,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 224,
+    "y": 448,
+    "width": 64,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 352,
+    "y": 416,
+    "width": 96,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 352,
+    "y": 320,
+    "width": 96,
+    "height": 32
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 480,
+    "y": 376,
+    "width": 152,
+    "height": 8
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 8,
+    "y": 480,
+    "width": 88,
+    "height": 8
+  },
+  {
+    "name": "ladder",
+    "x": 24,
+    "y": 480,
+    "width": 8,
+    "height": 80
+  },
+  {
+    "name": "spring",
+    "x": 256,
+    "y": 600,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 384,
+    "y": 600,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 480,
+    "y": 600,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 320,
+    "y": 600,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "npc",
+    "x": 168,
+    "y": 1184,
+    "width": 16,
+    "height": 16,
+    "flipX": false,
+    "text": [
+      "WARNING! YOU HAVE ENTERED THE PROPERTY OF PRINCESS WINTER OF THE ARCTIC KINGOM.",
+      "I swear I remember someone calling themselves that in high school..."
+    ],
+    "speeds": [
+      0.036,
+      0.036
+    ],
+    "portraits": [
+      0,
+      0
+    ],
+    "openingAnimation": true,
+    "sprite": ""
+  },
+  {
+    "name": "solid_rect",
+    "x": 96,
+    "y": 960,
+    "width": 24,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 136,
+    "y": 920,
+    "width": 24,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 104,
+    "y": 952,
+    "width": 24,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 128,
+    "y": 928,
+    "width": 24,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 112,
+    "y": 944,
+    "width": 24,
+    "height": 24
+  },
+  {
+    "name": "solid_rect",
+    "x": 120,
+    "y": 936,
+    "width": 24,
+    "height": 24
+  }
+]

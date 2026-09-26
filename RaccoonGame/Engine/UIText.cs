@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
+//pretty much useless
 class UIText : Drawable
 {
     public string text = "";

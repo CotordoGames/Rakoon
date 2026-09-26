@@ -11,6 +11,7 @@ public class Level
     public string BGMusic = "";
     public List<string> BGImages = new List<string>();
     public List<float> BGSpeeds = new List<float>();
+    public List<Vector2> BGOffsets = new List<Vector2>();
 
     //tileset
     public string Tileset = "";
@@ -52,6 +53,7 @@ public class Level
         level.BGSpeeds = meta.BGSpeeds;
         level.Tileset = meta.Tileset;
         level.SpawnPoint = meta.SpawnPoint;
+        level.BGOffsets = meta.BGOffsets;
 
         //load the raw level data
         byte[] raw = File.ReadAllBytes(Path.Combine(FolderPath, "level.rl"));
@@ -120,11 +122,20 @@ public static class LevelManager
 {
     public static string? PendingRoom = null;
     public static string PendingTargetDoorId = "";
+    public static bool Transitioning = false;
+    public static bool CanEnterDoor = true;
+    public static float Fade = 0f;
+    public static bool FadingIn = false;
 
     public static void RequestTransition(string room, string targetDoorId)
     {
+        if (!CanEnterDoor) return;
+
         PendingRoom = room;
         PendingTargetDoorId = targetDoorId;
+
+        Transitioning = true;
+        CanEnterDoor = false;
     }
 
     public static Level LoadAndSpawn(string folderPath)
@@ -204,6 +215,7 @@ class LevelMeta
     public List<string> BGImages = new List<string>();
     public List<float> BGSpeeds = new List<float>();
     public string Tileset = "";
+    public List<Vector2> BGOffsets = new List<Vector2>();
 
     //where the player should spawn
     public Vector2 SpawnPoint;

@@ -558,5 +558,34 @@
     "y": 120,
     "width": 160,
     "height": 8
+  },
+  {
+    "name": "NPC",
+    "x": 1688,
+    "y": 104,
+    "portraits": [
+      0, 1, 0, 1, 1, 0, 2
+    ],
+    "openingAnimation": true,
+    "speeds": [
+      0.036,
+      0.036,
+      0.036,
+      0.036,
+      0.036,
+      0.036,
+      0.036
+    ],
+    "sprite": "cubon.png",
+    "text": [
+      "...Hello?",
+      "Oh... hi.",
+      "Are you OK? It\u0027s not often I find homeless people in this city.",
+      "Nah. Some jackass blew up my house.",
+      "I\u0027m sleeping here while I rebuild it.",
+      "Oh... good luck with that",
+      "Fuck off."
+    ],
+    "flipX": true
   }
 ]

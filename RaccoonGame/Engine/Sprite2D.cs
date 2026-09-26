@@ -9,6 +9,7 @@ public class Sprite2D : Drawable
     public Texture2D Texture;
     public Rectangle SourceRect;
     public bool flipX;
+    public bool flipY;
 
 
     //how it creates itself
@@ -39,6 +40,14 @@ public class Sprite2D : Drawable
         else
         {
             flipX = false;
+        }
+        if (FlipY)
+        {
+            flipY = true;
+        }
+        else
+        {
+            flipY = false;
         }
         Rectangle destRect = new Rectangle(position.X, position.Y, size.X, size.Y);
         Raylib.DrawTexturePro(Texture, SourceRect, destRect, Vector2.Zero, 0.0f, tint);

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
+
+//code here for anyone who doesnt want to use FMOD-- its a VERY limited system though.
 public class MusicTrack
 {
     public Music Music;

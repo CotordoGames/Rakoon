@@ -15,7 +15,9 @@ public class Player : GameObject
     public const float MaxAirSpeed = 2.8f;
 
     //general movement values
-    public const int JumpForce = 6;
+    public const int JumpForce = 3;
+    public const int Jumps = 2;
+    public int CurrentJumps = 2;
     public float Gravity = 18;
     public float FallGravity = 22;
     public const float MaxFallSpeed = 6f;
@@ -27,7 +29,7 @@ public class Player : GameObject
     const float CoyoteTime = 0.1f;
     const float JumpBufferTime = 0.1f;
     const float ApexThresHold = 1.5f;
-    const float ApexGravityMult = 0.6f;
+    const float ApexGravityMult = 0.5f;
 
     //timers
     float coyoteTimer = 0f;
@@ -37,23 +39,49 @@ public class Player : GameObject
     static bool TextureLoaded = false;
     public override void Start()
     {
+
         //set the player to solid; make sure the texture is loaded
         IsSolid = true;
-        if (!TextureLoaded)
-        {
-            texture = Raylib.LoadTexture("assets/sprites/player/autumn.png");
-            TextureLoaded = true;
-        }
 
         //set important object values
         CanMove = true;
-        Size = new Vector2(16, 16);
-        ColliderSize = new Vector2(8, 13);
-        ColliderOffset = new Vector2(4, 3);
         DebugColor = Color.Blue;
 
-        //set the graphic to the texture
-        Graphic = new AnimatedSprite2D(texture, 16, 16);
+        if (EngineInit.Config.YuriMode)
+        {
+            if (!TextureLoaded)
+            {
+                texture = Raylib.LoadTexture("assets/sprites/player/cubon.png");
+                TextureLoaded = true;
+            }
+
+            //tailored to cubon
+            Size = new Vector2(16, 24);
+            ColliderSize = new Vector2(10, 14);
+            ColliderOffset = new Vector2(2, 10);
+
+            //set the graphic to the texture
+            Graphic = new AnimatedSprite2D(texture, 16, 24);
+
+
+        }
+        else
+        {
+            if (!TextureLoaded)
+            {
+                texture = Raylib.LoadTexture("assets/sprites/player/autumn.png");
+                TextureLoaded = true;
+            }
+
+            //tailored to autumn
+            Size = new Vector2(16, 16);
+            ColliderSize = new Vector2(8, 13);
+            ColliderOffset = new Vector2(4, 3);
+
+            //set the graphic to the texture
+            Graphic = new AnimatedSprite2D(texture, 16, 16);
+
+        }
 
         //initialize the animator and create animations
         var anim = (AnimatedSprite2D)Graphic;
@@ -62,12 +90,13 @@ public class Player : GameObject
         anim.AddAnimation("jump", new[] { 1 }, 1f, loop: false);
         anim.AddAnimation("dash", new[] { 2, 3, 4 }, 0.1f, loop: false);
         anim.AddAnimation("fall", new[] { 5, 6 }, 0.08f, loop: true);
-
         anim.Play("idle");
     }
 
     public override void Update(float deltaTime)
     {
+        if(!CanMove) return;
+
         int Direction = Raylib.IsKeyDown(KeyboardKey.Right) - Raylib.IsKeyDown(KeyboardKey.Left);
 
         //flip the players' sprite
@@ -89,6 +118,7 @@ public class Player : GameObject
 
         if(Raylib.IsKeyPressed(KeyboardKey.X) && !isDashing && Graphic is AnimatedSprite2D dashTrigger)
         {
+            Program.audio.PlayOneShot("dash");
             isDashing = true;
             dashTrigger.Play("dash", restart: true);
             if(Direction != 0)
@@ -105,10 +135,13 @@ public class Player : GameObject
             isDashing = false;
         }
 
+
+
         //ground movement and jump check
         if (IsGrounded)
         {
             Gravity = 18f;
+            CurrentJumps = Jumps;
 
             /*if(Direction != 0)
             {
@@ -164,7 +197,7 @@ public class Player : GameObject
             Velocity.Y += Gravity * gravityScale * deltaTime;
             Velocity.Y = Math.Min(Velocity.Y, MaxFallSpeed);
 
-            if(Raylib.IsKeyReleased(KeyboardKey.Z))
+            if(Raylib.IsKeyReleased(KeyboardKey.Z) && !isDashing)
             {
                 Gravity = 22;
                 Velocity.Y /= 2;
@@ -172,15 +205,39 @@ public class Player : GameObject
 
         }
 
-        if(jumpBufferTimer > 0f && coyoteTimer > 0f)
+        if(jumpBufferTimer > 0f && (coyoteTimer > 0f || CurrentJumps > 0))
         {
             Program.audio.PlayOneShot("jump");
-            Velocity.Y = -JumpForce;
+            Velocity.Y = -JumpForce * CurrentJumps;
+            Gravity = 18f;
+
+            if(coyoteTimer > 0f)
+            {
+                coyoteTimer = 0f;
+            }
+            else
+            {
+                CurrentJumps--;
+            }
+
+            CurrentJumps--;
+
             jumpBufferTimer = 0f;
             coyoteTimer = 0f;
         }
 
-        if(Graphic is AnimatedSprite2D anim2)
+        foreach (var obj in CurrentlyColliding)
+        {
+            if (obj is Ladder && Raylib.IsKeyDown(KeyboardKey.Up))
+            {
+                Velocity.X = 0;
+                Velocity.Y = -2;
+                break;
+            }
+        }
+
+
+        if (Graphic is AnimatedSprite2D anim2)
         {
 
             if (isDashing)
