@@ -121,11 +121,13 @@ public class Autumn : GameObject
         //initialize the animator and create animations
         var anim = (AnimatedSprite2D)Graphic;
         anim.AddAnimation("idle", new[] { 0 }, 1f);
-        anim.AddAnimation("walk", new[] { 0, 1 }, 0.08f);
-        anim.AddAnimation("run", new[] { 0, 1 }, 0.04f);
-        anim.AddAnimation("jump", new[] { 1 }, 1f, loop: false);
-        anim.AddAnimation("dash", new[] { 2, 3, 4 }, 0.1f, loop: false);
-        anim.AddAnimation("fall", new[] { 5, 6 }, 0.08f, loop: true);
+        anim.AddAnimation("walk", new[] { 0, 5 }, 0.08f);
+        anim.AddAnimation("run", new[] { 0, 5 }, 0.04f);
+        anim.AddAnimation("jump", new[] { 1, 2, 3, 4, 5 }, 0.08f, loop: false);
+        anim.AddAnimation("dash", new[] { 6, 7, 8 }, 0.1f, loop: false);
+        anim.AddAnimation("fall", new[] { 9 }, 0.08f, loop: true);
+        anim.AddAnimation("slide", new[] { 11 }, 1f);
+        anim.AddAnimation("climb", new[] { 12, 13 }, 0.1f);
         anim.Play("idle");
 
         state = PlayerState.idle;
@@ -356,8 +358,8 @@ public class Autumn : GameObject
             PlayerState.run => "run",
             PlayerState.jump => "jump",
             PlayerState.dash => "dash",
-            PlayerState.wallSlide => "fall",
-            PlayerState.climb => "walk",
+            PlayerState.wallSlide => "slide",
+            PlayerState.climb => "climb",
             _ => "idle"
         };
         anim.Play(clip);
