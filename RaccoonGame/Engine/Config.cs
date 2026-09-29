@@ -21,8 +21,8 @@ public class ConfigSettings
 
         try
         {
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, IncludeFields = true };
-            var conf = JsonSerializer.Deserialize<ConfigMeta>(File.ReadAllText(path), options);
+            //var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, IncludeFields = true };
+            var conf = JsonSerializer.Deserialize(File.ReadAllText(path), AppJsonContext.Default.ConfigMeta);
             if (conf == null) return new ConfigSettings();
 
             return new ConfigSettings
@@ -58,7 +58,11 @@ public class ConfigSettings
             StartFullScreen = StartFullScreen, YuriMode = YuriMode
         };
 
-        File.WriteAllText(path, JsonSerializer.Serialize(meta, new JsonSerializerOptions { WriteIndented = true }));
+        //File.WriteAllText(path, JsonSerializer.Serialize(meta, new JsonSerializerOptions { WriteIndented = true }));
+
+        string json = JsonSerializer.Serialize(meta, AppJsonContext.Default.ConfigMeta);
+
+        File.WriteAllText(path, json);
     }
 }
 

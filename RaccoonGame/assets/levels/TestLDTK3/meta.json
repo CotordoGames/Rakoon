@@ -5,12 +5,22 @@
   "width": 40,
   "height": 32,
   "bgm": "",
-  "bgImages": [],
-  "bgSpeeds": [],
-  "tileset": "bricks",
+  "bgImages": [
+    "ice_palace.png"
+  ],
+  "bgSpeeds": [
+    0.025
+  ],
+  "tileset": "ice_palace",
   "spawnPoint": {
     "x": 8,
     "y": 208
   },
+  "bgOffsets": [
+    {
+      "x": 0,
+      "y": 0
+    }
+  ],
   "hasSpawnPoint": true
 }

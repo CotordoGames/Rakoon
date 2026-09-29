@@ -7,20 +7,27 @@ using Raylib_cs;
 
 public class Door : GameObject
 {
+
+    //texture to represent the door in-game
     Texture2D dore;
 
+    //room and door id, pretty self explanatory
     public string Room = "";
     public string DoorId = "";
 
     public override void Start()
     {
+        //controls what order it gets drawn in-- in this case almost always the back
         DrawOrder = -10;
 
+        //load the texture
         dore = Raylib.LoadTexture("assets/sprites/objects/dore.png");
 
+        //it shouldnt be solid; set the size to 16x16
         IsSolid = false;
         Size = new Vector2(16, 16);
 
+        //initialize the graphic
         Graphic = new Sprite2D(dore);
     }
 
@@ -40,6 +47,7 @@ public class Door : GameObject
 
     public override void LoadFromJson(JsonElement json)
     {
+        //get room and door id from the JSON
         Room = json.GetProperty("room").GetString() ?? "";
         DoorId = json.GetProperty("DoorId").GetString() ?? "";
 

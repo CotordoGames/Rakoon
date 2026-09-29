@@ -369,6 +369,7 @@ public class Autumn : GameObject
         deathPos = new Vector2(Program.level.SpawnPoint.X - Program.player.Size.X / 2, Program.level.SpawnPoint.Y - Program.player.Size.Y / 2);
         deathVel = Vector2.Zero;
         Program.audio.PlayOneShot("death");
+        health.FullHeal();
     }
 
     public void HandleTakeDamage()

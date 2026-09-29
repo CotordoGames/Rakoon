@@ -38,8 +38,8 @@ public class Level
 
         //set up the json parser and parse meta
         string metaJson = File.ReadAllText(Path.Combine(FolderPath, "meta.json"));
-        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, IncludeFields = true };
-        var meta = JsonSerializer.Deserialize<LevelMeta>(metaJson, options)
+        //var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true, IncludeFields = true };
+        var meta = JsonSerializer.Deserialize(metaJson, AppJsonContext.Default.LevelMeta)
             ?? throw new InvalidDataException($"{FolderPath}/meta.json failed to parse.");
 
         //set the level properties according to the JSON
@@ -207,7 +207,7 @@ public static class LevelRenderer
     }
 }
 
-class LevelMeta
+public class LevelMeta
 {
     //the width, height, bgm, and background variables
     public int Width; public int Height;

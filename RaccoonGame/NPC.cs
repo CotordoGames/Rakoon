@@ -44,7 +44,7 @@ public class NPC : GameObject
     {
         if(TryGetPropertyCI(json, "text", out var t))
         {
-            lines = t.Deserialize<string[]>() ?? Array.Empty<string>();
+            lines = t.Deserialize(AppJsonContext.Default.StringArray) ?? Array.Empty<string>();
         }
 
         if(TryGetPropertyCI(json, "openingAnimation", out var oa))
@@ -64,12 +64,12 @@ public class NPC : GameObject
 
         if(TryGetPropertyCI(json, "speeds", out var s))
         {
-            speeds = s.Deserialize<float[]>() ?? Array.Empty<float>();
+            speeds = s.Deserialize(AppJsonContext.Default.SingleArray) ?? Array.Empty<float>();
         }
 
         if(TryGetPropertyCI(json, "portraits", out var p))
         {
-            portraits = p.Deserialize<int[]>() ?? Array.Empty<int>();
+            portraits = p.Deserialize(AppJsonContext.Default.Int32Array) ?? Array.Empty<int>();
         }
     }
 }

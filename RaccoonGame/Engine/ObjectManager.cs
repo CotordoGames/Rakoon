@@ -13,7 +13,7 @@ public static class ObjectManager
     public static List<GameObject> SemiSolids = new List<GameObject>();
     public static List<CameraZone> CameraZones = new List<CameraZone>();
 
-    public static Font DebugFont = Raylib.LoadFont("assets/debug.ttf");
+    public static Font DebugFont = Raylib.LoadFontEx("assets/debug.ttf", 7, null, 0);
 
     //a function to add an object into the master lists
     public static void AddObject(GameObject obj)
@@ -263,7 +263,7 @@ public static class ObjectManager
                     //label
                     if (Program.DebugText)
                     {
-                        Raylib.DrawTextPro(DebugFont, obj.GetType().ToString() + "\n" + "size: " + obj.ColliderSize + "borders:" + cz.BorderX + ", " + cz.BorderX + "\n" + "offsets: " + cz.Offset, obj.Position + Vector2.One, Vector2.Zero, 0f, 8, 0, Color.White);
+                        Raylib.DrawTextPro(DebugFont, obj.GetType().ToString() + "\n" + "size: " + obj.ColliderSize + "borders:" + cz.BorderX + ", " + cz.BorderX + "\n" + "offsets: " + cz.Offset, obj.Position + Vector2.One, Vector2.Zero, 0f, 7, 0, Color.White);
                     }
                 }
                 
@@ -277,7 +277,7 @@ public static class ObjectManager
                 //label
                 if (Program.DebugText)
                 {
-                    Raylib.DrawTextPro(DebugFont, obj.GetType().ToString() + "\n" + "size: " + obj.ColliderSize, obj.Position + Vector2.One, Vector2.Zero, 0f, 8, 0, Color.White);
+                    Raylib.DrawTextPro(DebugFont, obj.GetType().ToString() + "\n" + "size: " + obj.ColliderSize, obj.Position + Vector2.One, Vector2.Zero, 0f, 7, 0, Color.White);
                 }
             }
         }

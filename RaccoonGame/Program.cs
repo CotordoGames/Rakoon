@@ -22,6 +22,9 @@ class Program
     static List<Texture2D> bgTextures = new List<Texture2D>();
     static GameCamera camera = null!;
 
+    //player health bar
+    public static HealthBar PlayerHealthBar = new HealthBar(Autumn.health);
+
     const float FadeSpeed = 5f;
 
 
@@ -155,8 +158,13 @@ class Program
 
         Raylib.EndMode2D();
 
+        //draw the players health
+        PlayerHealthBar.Draw(new Vector2(8, 8), new Vector2(48, 8), Color.White);
+
+        //draw the text box
         DialogueManager.Draw();
 
+        //draw the LM fade effect if we must
         if(LevelManager.Fade > 0f)
         {
             Raylib.DrawRectangle(0, 0, screen.Width, screen.Height, new Color((byte)0, (byte)0, (byte)0, (byte)(LevelManager.Fade * 255)));

@@ -23,9 +23,9 @@ public class MusicTrack
 
         string metaPath = Path.Combine(folderPath, "meta.json");
         if (File.Exists(metaPath)){
-            var opts = new JsonSerializerOptions { IncludeFields = true, PropertyNameCaseInsensitive = true };
+            //var opts = new JsonSerializerOptions { IncludeFields = true, PropertyNameCaseInsensitive = true };
 
-            var meta = JsonSerializer.Deserialize<MusicMeta>(File.ReadAllText(metaPath), opts);
+            var meta = JsonSerializer.Deserialize(File.ReadAllText(metaPath), AppJsonContext.Default.MusicMeta);
 
             if(meta != null)
             {
@@ -58,7 +58,7 @@ public class MusicTrack
     public void Unload() => Raylib.UnloadMusicStream(Music);
 }
 
-class MusicMeta
+public class MusicMeta
 {
     public string Name = "";
     public string Author = "";

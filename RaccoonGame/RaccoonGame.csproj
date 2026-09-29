@@ -5,17 +5,15 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<PublishAot>true</PublishAot>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<InvariantGlobalization>true</InvariantGlobalization>
-		<SelfContained>false</SelfContained>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<PublishSingleFile>true</PublishSingleFile>
+		<SelfContained>true</SelfContained>
+		<!-- was publish single file = true-->
 		<AssemblyTitle>Raccoongame</AssemblyTitle>
 		<ApplicationIcon>autumn.ico</ApplicationIcon>
 		<PlatformTarget>AnyCPU</PlatformTarget>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<PublishTrimmed>False</PublishTrimmed>
-		<PublishAot>False</PublishAot>
+		<PublishTrimmed>true</PublishTrimmed>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,24 +21,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Force dotnet to copy the native FMOD DLLs directly next to your game executable -->
-		<None Include="NativeLibs/win-x64/fmodL.dll">
-			<Link>fmodL.dll</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Include="NativeLibs/win-x64/fmodstudioL.dll">
-			<Link>fmodstudioL.dll</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Include="NativeLibs/win-x64/fmod.dll">
-			<Link>fmod.dll</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Include="NativeLibs/win-x64/fmodstudio.dll">
-			<Link>fmodstudio.dll</Link>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-
 		<!-- Automatically copy the entire Assets folder and its subdirectories to the build output -->
 		<None Include="assets\**\*">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -51,5 +31,27 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+
+	<PropertyGroup>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux-x64</RuntimeIdentifier>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64'">
+		<Content Include="NativeLibs\win-x64\*.dll">
+			<TargetPath>%(Filename)%(Extension)</TargetPath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-x64'">
+		<Content Include="NativeLibs\linux-x64\*.so">
+			<TargetPath>%(Filename)%(Extension)</TargetPath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+
 
 </Project>

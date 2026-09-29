@@ -12,6 +12,8 @@ public class Spring : GameObject
 
     static Texture2D texture;
     static bool TextureLoaded = false;
+
+    public static bool mboing = false;
     public override void Start()
     {
         Size = new Vector2(8, 8);
@@ -29,7 +31,8 @@ public class Spring : GameObject
 
         var anim = (AnimatedSprite2D)Graphic;
 
-        anim.AddAnimation("default", [1], 1, loop: true);
+        anim.AddAnimation("default", [0], 1, loop: true);
+        anim.AddAnimation("bounce", [ 1, 2, 3, 0], 0.075f, loop: false);
 
         anim.Play("default", restart: true);
 
@@ -37,7 +40,19 @@ public class Spring : GameObject
 
     public override void Update(float deltaTime)
     {
-        
+        var anim = (AnimatedSprite2D?)Graphic;
+        foreach (var obj in CurrentlyColliding)
+        {
+            if(obj is Autumn)
+            {
+                anim?.Play("bounce", false);
+            }
+        }
+
+        if (!anim.IsPlaying)
+        {
+            anim.Play("default", restart: true);
+        }
     }
 
     public override void LoadFromJson(JsonElement json)
