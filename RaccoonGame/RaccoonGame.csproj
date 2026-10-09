@@ -9,9 +9,8 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <InvariantGlobalization>true</InvariantGlobalization>
 
-        <SelfContained>false</SelfContained>
-        <PublishSingleFile>false</PublishSingleFile>
-        <PublishTrimmed>false</PublishTrimmed>
+        <SelfContained>true</SelfContained>
+        <PublishTrimmed>true</PublishTrimmed>
         <PublishAot>false</PublishAot>
 
         <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,19 +35,15 @@
     </ItemGroup>
 
     <!-- Copy all native files from NativeLibs/<runtime identifier>/ -->
-    <ItemGroup Condition="Exists('$(NativeLibDirectory)')">
-        <NativeRuntimeFiles Include="$(NativeLibDirectory)/**/*" />
+    <ItemGroup>
+        <None Include="NativeLibs/$(RuntimeIdentifier)/**/*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+            <TargetPath>%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+        </None>
     </ItemGroup>
 
-    <Target Name="CopyNativeRuntimeFiles"
-            AfterTargets="Build"
-            Condition="'@(NativeRuntimeFiles)' != ''">
 
-        <Copy
-                SourceFiles="@(NativeRuntimeFiles)"
-                DestinationFiles="@(NativeRuntimeFiles->'$(OutputPath)%(RecursiveDir)%(Filename)%(Extension)')"
-                SkipUnchangedFiles="true" />
-    </Target>
 
     <!-- Copy the assets directory -->
     <ItemGroup>

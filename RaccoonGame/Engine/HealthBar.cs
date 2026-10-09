@@ -33,7 +33,7 @@ public class HealthBar : Drawable
         Vector2 TextPosition = new Vector2(((BarPosition.X + (size.X / 2))) - (Raylib.MeasureTextEx(Program.Rakoon, Health.CurrentHP.ToString(), 10, 0).X / 2), BarPosition.Y);
 
         //draw "HEALTH: "
-        Raylib.DrawTextEx(Program.Rakoon, "HEALTH: ", new Vector2(position.X - 1, position.Y + 1), 10, 0, new Color(50, 45, 77, 255));
+        Raylib.DrawTextEx(Program.Rakoon, "HEALTH: ", new Vector2(position.X - 1, position.Y + 1), 10, 0, Color.Black);
         Raylib.DrawTextEx(Program.Rakoon, "HEALTH: ", position, 10, 0, Color.White);
 
         //draw the health bars Background
@@ -49,7 +49,10 @@ public class HealthBar : Drawable
         Raylib.DrawRectangleLines((int)BarPosition.X, (int)BarPosition.Y, (int)size.X, (int)size.Y, BorderColor);
 
         //draw the actual number of HP we have
-        //Raylib.DrawTextEx(Program.Rakoon, Health.CurrentHP.ToString(), new Vector2(TextPosition.X - 1, TextPosition.Y + 1), 10, 0, new Color(50, 45, 77, 255));
+        Raylib.DrawTextEx(Program.Rakoon, Health.CurrentHP.ToString(), new Vector2(TextPosition.X - 1, TextPosition.Y), 10, 0, Color.Black);
+        Raylib.DrawTextEx(Program.Rakoon, Health.CurrentHP.ToString(), new Vector2(TextPosition.X + 1, TextPosition.Y), 10, 0, Color.Black);
+        Raylib.DrawTextEx(Program.Rakoon, Health.CurrentHP.ToString(), new Vector2(TextPosition.X, TextPosition.Y + 1), 10, 0, Color.Black);
+        Raylib.DrawTextEx(Program.Rakoon, Health.CurrentHP.ToString(), new Vector2(TextPosition.X, TextPosition.Y - 1), 10, 0, Color.Black);
         Raylib.DrawTextEx(Program.Rakoon, Health.CurrentHP.ToString(), TextPosition, 10, 0, Color.White);
     }
 }

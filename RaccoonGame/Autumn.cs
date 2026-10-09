@@ -8,23 +8,23 @@ using System.Text;
 public class Autumn : GameObject
 {
     //ground movement values, changed to be uncapped and have friction instead
-    public const float WalkAcceleration = 5f;
+    public const float WalkAcceleration = 6f;
     public const float RunAcceleration = 8f;
     public const float GroundDrag = 2f;
-    public const float GroundFriction = 7f;
+    public const float GroundFriction = 10f;
 
     //air movement values-- no speed needed now
     public const float AirAcceleration = 5f;
     public const float MaxAirSpeed = 3.5f;
 
     //general movement values
-    public const float JumpForce = 5.5f;
-    public const float AirJumpForce = 3;
+    public const float JumpForce = 5.0f;
+    public const float AirJumpForce = 4.0f;
     public const int Jumps = 1;
     public int CurrentJumps = 2;
     public float Gravity = 18;
-    public float FallGravity = 22;
-    public const float MaxFallSpeed = 6f;
+    public float FallGravity = 28;
+    public const float MaxFallSpeed = 8f;
     public bool WasGrounded = false;
 
     //dash
@@ -59,7 +59,7 @@ public class Autumn : GameObject
     static Texture2D texture;
     static bool TextureLoaded = false;
 
-    PlayerState state;
+    public PlayerState state;
 
     public Autumn() 
     {
@@ -135,6 +135,8 @@ public class Autumn : GameObject
 
     public override void Update(float dt)
     {
+        if(!CanMove) return;
+        
         if (isDead)
         {
             Position = deathPos;
@@ -360,6 +362,7 @@ public class Autumn : GameObject
             PlayerState.dash => "dash",
             PlayerState.wallSlide => "slide",
             PlayerState.climb => "climb",
+            PlayerState.fall => "fall",
             _ => "idle"
         };
         anim.Play(clip);

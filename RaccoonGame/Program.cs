@@ -39,8 +39,8 @@ class Program
         // ---------- ENGINE INITIALIZATION ---------- //
         EngineInit.Initialize(
             windowTitle: "RAKOON",
-            windowWidth: 1280, windowHeight: 720,
-            virtualWidth: 320, virtualHeight: 180,
+            windowWidth: 640, windowHeight: 360,
+            virtualWidth: 240, virtualHeight: 160,
             banksFolderPath: "assets/banks/Desktop",
             fontPath: "assets/sprites/rakoon.ttf",
             portraitAtlasPath: "assets/sprites/portraits.png"

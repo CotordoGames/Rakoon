@@ -40,7 +40,16 @@ public class VirtualScreen
             int windowHeight = Raylib.GetScreenHeight();
 
             //see how big we can scale before the aspect ration doesnt work
-            float scale = Math.Min((float)windowWidth / Width, (float)windowHeight / Height);
+            //float scale = Math.Min((float)windowWidth / Width, (float)windowHeight / Height);
+
+            int scale = Math.Max(1,
+                (int)Math.Floor(
+                    Math.Min(
+                        (float)windowWidth / Width,
+                        (float)windowHeight / Height
+                    )
+                )
+            );
 
             //update DestRect
             DestRect = new Rectangle(

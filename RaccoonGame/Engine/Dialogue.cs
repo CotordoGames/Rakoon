@@ -83,6 +83,10 @@ public static class DialogueManager
         };
         openTimer = openingAnimation ? 0f : OpenDuration;
         StartLine(0); 
+        if (Program.player is Autumn autumn)
+        {
+            autumn.state = Autumn.PlayerState.idle;
+        }
         Program.player.CanMove = false;
     }
 
