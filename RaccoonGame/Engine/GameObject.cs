@@ -11,11 +11,13 @@ public abstract class GameObject
     public Vector2 Position;
     public Vector2 Velocity;
     public Vector2 Size;
+    public Vector2 VisualScale = Vector2.One;
     public Vector2 ColliderOffset;
     public bool IsGrounded = false;
     public bool IsTouchingWallLeft = false;
     public bool IsTouchingWallRight = false;
     public List<GameObject> CurrentlyColliding = new List<GameObject>();
+    public List<Component> Components = new List<Component>();
     public int DrawOrder = 0;
 
     //default set to size but can be changed
@@ -63,6 +65,14 @@ public abstract class GameObject
         }
         value = default;
         return false;
+    }
+
+    public void UpdateComponents(float deltaTime)
+    {
+        for(int i = 0; i < Components.Count; i++)
+        {
+            Components[i].Update(deltaTime);
+        }
     }
 }
 

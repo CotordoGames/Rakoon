@@ -15,7 +15,7 @@ public class Level
     public List<Vector2> BGOffsets = new List<Vector2>();
 
     //tileset
-    public string Tileset = "";
+    public string Tileset = "template";
 
     //objects that the level spawns
     public List<GameObject> LevelObjects = new List<GameObject>();

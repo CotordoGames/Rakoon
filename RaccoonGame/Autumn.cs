@@ -19,7 +19,7 @@ public class Autumn : GameObject
 
     //general movement values
     public const float JumpForce = 5.0f;
-    public const float AirJumpForce = 4.0f;
+    public const float AirJumpForce = 4.36f;
     public const int Jumps = 1;
     public int CurrentJumps = 2;
     public float Gravity = 18;
@@ -49,6 +49,7 @@ public class Autumn : GameObject
     //timers
     float coyoteTimer = 0f;
     float jumpBufferTimer = 0f;
+    float squashTimer = 0f;
 
     //health
     public static HealthSystem health;
@@ -131,6 +132,8 @@ public class Autumn : GameObject
         anim.Play("idle");
 
         state = PlayerState.idle;
+
+        DialogueManager.TriggerDialogue(["heya, dev here.", "this build is simply meant to get feedback on the movement, to dont judge it too much...", "you may press F11 for fullscreen, F1 for debug mode, and keys F2-F4 while in debug to toggle certain features... ciao!"], [0.036f, 0.036f, 0.036f], [-1, -1, -1], true, 48, 2);
     }
 
     public override void Update(float dt)
@@ -164,6 +167,7 @@ public class Autumn : GameObject
         if (!WasGrounded && IsGrounded)
         {
             Program.audio.PlayOneShot("land");
+            squashTimer = 0.036f;
         }
 
         TryStartDash(direction);
@@ -172,7 +176,7 @@ public class Autumn : GameObject
         bool onLadder = false;
         foreach (var obj in CurrentlyColliding)
         {
-            if (obj is Spring)
+            if (obj is Spring && state != PlayerState.dash)
             {
                 var spring = (Spring)obj;
                 Program.audio.PlayOneShot("spring");
@@ -247,6 +251,7 @@ public class Autumn : GameObject
         TryJump();
         UpdateFacing(direction);
         UpdateAnimation();
+        UpdateSquashStretch(dt);
 
         WasGrounded = IsGrounded;
     }
@@ -390,5 +395,28 @@ public class Autumn : GameObject
             return target;
         }
         return current + MathF.Sign(target - current) * maxDelta;
+    }
+
+    void UpdateSquashStretch(float dt)
+    {
+        //default; normal proportions
+        Vector2 target = Vector2.One;
+
+        //Landing squash betterrrrrr
+        if(squashTimer > 0f)
+        {
+            squashTimer -= dt;
+            target = new Vector2(1.0f, 1.0f);
+        }
+        else if(state == PlayerState.jump)
+        {
+            target = new Vector2(1.0f, 1.0f);
+        }
+        else if(state == PlayerState.fall)
+        {
+            target = new Vector2(1.0f, 1.0f);
+        }
+
+        VisualScale = Vector2.Lerp(VisualScale, target, Math.Clamp(24f * dt, 0f, 1f));
     }
 }

@@ -23,6 +23,7 @@ public static class DialogueManager
     //values to determine how the portrait is rendered
     static Texture2D portraitAtlas;
     const int PortraitSize = 48;
+    static int portraitColumns = 1;
 
     //active variables to keep track of shit
     static int lineIndex;
@@ -42,13 +43,36 @@ public static class DialogueManager
     public static bool IsOpen => Active != null;
 
     //init
-    public static void Init(Texture2D atlas) => portraitAtlas = atlas;
-
-    public static void TriggerDialogue(string[] lines, float[] speeds, int[]? portraits = null, bool openingAnimation = true, int height = 56)
+    public static void Init(Texture2D atlas)
     {
-        int w = Program.ScreenWidth - 16;
+        portraitAtlas = atlas;
+        portraitColumns = Math.Max(1, atlas.Width / PortraitSize);
+    }
+
+
+    /// <summary>
+    /// triggers a dialogue interaction
+    /// </summary>
+    /// <param name="lines">the lines in this dialogue interaction</param>
+    /// <param name="speeds">the speed at ehich each line is typed</param>
+    /// <param name="portraits">the portrait to disp;ay for each line(-1  for none)</param>
+    /// <param name="openingAnimation">whether the textbox displays it's opening animation</param>
+    /// <param name="height">how tall the textbox is in pixels</param>
+    /// <param name="tbtype">the type of textbox that shall be used for the interaction</param>
+    public static void TriggerDialogue(string[] lines, float[] speeds, int[]? portraits = null, bool openingAnimation = true, int height = 56, int tbtype = 0)
+    {
+        //(if i were smart, id just use an enum for this)
+        //TB TYPE LAYOUT:
+        //0: regular, textbox is at bottom and takes up width of the screen -16 pixels
+        //1: top regular, appears at top but still has a normal width
+
+        /*2: "dynamic notice". appears at top, narrower for more direct messages. 
+         * TriggerNotice() doesnt support multiple lines and/or the typewriter effect, if those are needed, use this
+         */
+
+        int w = tbtype == 2 ? Program.ScreenWidth - 64 : Program.ScreenWidth - 16;
         int x = (Program.ScreenWidth - w) / 2;
-        int y = Program.ScreenHeight - height - 8;
+        int y = tbtype == 1 || tbtype == 2 ? 24 : Program.ScreenHeight - height - 8;
 
         //put the textbox where it needs to be
         Active = new DialogueBox
@@ -217,14 +241,16 @@ public static class DialogueManager
 
         float t = EaseOutBack(progress);
 
-        int h = (int)(box.H * t);
-        int w = (int)(box.W * t);
-        int x = box.X + (box.W - w) / 2;
-        int y = box.Y + (box.H - h) / 2;
+        Rectangle TextBoxRect;
+
+        TextBoxRect.Height = (int)(box.H * t);
+        TextBoxRect.Width = (int)(box.W * t);
+        TextBoxRect.X = box.X + (box.W - TextBoxRect.Width) / 2;
+        TextBoxRect.Y = box.Y + (box.H - TextBoxRect.Height) / 2;
 
         //draw the box itself(and the outline)
-        Raylib.DrawRectangle(x, y, w, h, new Color((byte)50, (byte)45, (byte)77, (byte)192));
-        Raylib.DrawRectangleLines(x, y, w, h, new Color((byte)71, (byte)67, (byte)148, (byte)255));
+        Raylib.DrawRectangleRec(TextBoxRect, new Color((byte)50, (byte)45, (byte)77, (byte)192));
+        Raylib.DrawRectangleLinesEx(TextBoxRect, 1.0f, new Color((byte)71, (byte)67, (byte)148, (byte)255));
         if (progress < 1f) return;
 
         //set up values for the portrait and text drawing
@@ -232,8 +258,11 @@ public static class DialogueManager
         int portraitIndex = box.Portraits[lineIndex];
         if(portraitIndex >= 0)
         {
+            int col = portraitIndex % portraitColumns;
+            int row = portraitIndex / portraitColumns;
+
             //draw the protrait
-            var src = new Rectangle(portraitIndex * PortraitSize, 0, PortraitSize, PortraitSize);
+            var src = new Rectangle(col * PortraitSize, row * PortraitSize, PortraitSize, PortraitSize);
             Raylib.DrawTextureRec(portraitAtlas, src, new Vector2(box.X + 4, box.Y + 4), Color.White);
             textX += PortraitSize + 6;
         }

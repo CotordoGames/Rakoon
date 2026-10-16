@@ -32,12 +32,15 @@ public class HealthBar : Drawable
         Vector2 BarPosition = new Vector2(position.X + Raylib.MeasureTextEx(Program.Rakoon, "HEALTH: ", 10, 0).X, position.Y);
         Vector2 TextPosition = new Vector2(((BarPosition.X + (size.X / 2))) - (Raylib.MeasureTextEx(Program.Rakoon, Health.CurrentHP.ToString(), 10, 0).X / 2), BarPosition.Y);
 
+        //i love automatic batching
+        Rectangle BarBackground = new Rectangle(BarPosition, size);
+
         //draw "HEALTH: "
         Raylib.DrawTextEx(Program.Rakoon, "HEALTH: ", new Vector2(position.X - 1, position.Y + 1), 10, 0, Color.Black);
         Raylib.DrawTextEx(Program.Rakoon, "HEALTH: ", position, 10, 0, Color.White);
 
         //draw the health bars Background
-        Raylib.DrawRectangleV(BarPosition, size, BackgroundColor);
+        Raylib.DrawRectangleRec(BarBackground, BackgroundColor);
 
         //calculate the actual scale needed based on the health
         float pct = Health.MaxHP > 0 ? (float)Health.CurrentHP / Health.MaxHP : 0f;
@@ -46,9 +49,10 @@ public class HealthBar : Drawable
         Raylib.DrawRectangleV(new Vector2(BarPosition.X + 2, BarPosition.Y + 2), new Vector2((size.X * pct) - 4, size.Y - 4), FillColor);
 
         //outline
-        Raylib.DrawRectangleLines((int)BarPosition.X, (int)BarPosition.Y, (int)size.X, (int)size.Y, BorderColor);
+        Raylib.DrawRectangleLinesEx(BarBackground, 1.0f, BorderColor);
 
         //draw the actual number of HP we have
+        //this all gets batched because its the same text
         Raylib.DrawTextEx(Program.Rakoon, Health.CurrentHP.ToString(), new Vector2(TextPosition.X - 1, TextPosition.Y), 10, 0, Color.Black);
         Raylib.DrawTextEx(Program.Rakoon, Health.CurrentHP.ToString(), new Vector2(TextPosition.X + 1, TextPosition.Y), 10, 0, Color.Black);
         Raylib.DrawTextEx(Program.Rakoon, Health.CurrentHP.ToString(), new Vector2(TextPosition.X, TextPosition.Y + 1), 10, 0, Color.Black);

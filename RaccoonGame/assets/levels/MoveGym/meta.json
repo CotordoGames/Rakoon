@@ -1,0 +1,26 @@
+{
+  "name": "MoveGym",
+  "author": "",
+  "version": 1,
+  "width": 160,
+  "height": 76,
+  "bgm": "rakoon_exercise",
+  "bgImages": [
+    "bg_block.png"
+  ],
+  "bgSpeeds": [
+    0.25
+  ],
+  "bgOffsets": [
+    {
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "tileset": "blocks",
+  "spawnPoint": {
+    "x": 64,
+    "y": 528
+  },
+  "hasSpawnPoint": true
+}

@@ -23,6 +23,10 @@ public static class ObjectManager
         if (obj.IsSolid) Solids.Add(obj);
         if (obj is CameraZone cz) CameraZones.Add(cz);
         if (obj is SemiSolidRect) SemiSolids.Add(obj);
+        for(int i = 0; i < obj.Components.Count; i++)
+        {
+            obj.Components[i].Owner = obj; //apply the owner of the components to the owner feild of each
+        }
     }
 
     //deletes all objects, great for switching a scene
@@ -52,6 +56,7 @@ public static class ObjectManager
 
             obj.Update(deltaTime);
             obj.Graphic?.Update(deltaTime);
+            obj.UpdateComponents(deltaTime);
 
             if (obj.CanMove)
             {
@@ -232,16 +237,32 @@ public static class ObjectManager
             //check if the object actually HAS an image to avoid crashes
             if (obj.Graphic != null)
             {
-                obj.Graphic.Draw(Vector2.Round(obj.Position), Vector2.Round(obj.Size), Color.White);
+                Vector2 drawSize = obj.Size * obj.VisualScale; // objects now can multiply the graphic's draw size
+
+                Vector2 drawPosition = obj.Position + new Vector2((obj.Size.X - drawSize.X)/2, obj.Size.Y - drawSize.Y); //adjust the position
+
+                obj.Graphic.Draw(Vector2.Round(drawPosition), Vector2.Round(drawSize), Color.White);
             }
         }
     }
 
     public static void DrawDebugWorld(Rectangle cameraView)
     {
-        var sorted = AllObjects.Where(o => o.Active).OrderBy(o => o.DrawOrder); //sort the objects by draw order
+        var sorted = AllObjects
+            .Where(o => o.Active)
+            .Where(o =>
+            {
+                Rectangle bounds = new Rectangle(o.Position.X, o.Position.Y, o.Size.X, o.Size.Y);
 
-        foreach(var obj in sorted)
+                return Raylib.CheckCollisionRecs(bounds, cameraView);
+
+            }) //filter out offscreen objects
+            .OrderBy(o => o.DrawOrder) //sort by draw order
+            .ToList();
+
+
+
+        foreach (var obj in sorted)
         {
             //if the object isnt active, dont draw it
             if (!obj.Active) continue;
@@ -257,28 +278,53 @@ public static class ObjectManager
                 if (Program.DebugCameraZones)
                 {
                     //draw(camerazone
-                    Raylib.DrawRectangle((int)debugRect.X, (int)debugRect.Y, (int)debugRect.Width, (int)debugRect.Height, new Color(0, 255, 0, 24));
-                    Raylib.DrawRectangleLines((int)debugRect.X, (int)debugRect.Y, (int)debugRect.Width, (int)debugRect.Height, new Color(0, 255, 0, 255));
-
-                    //label
-                    if (Program.DebugText)
-                    {
-                        Raylib.DrawTextPro(DebugFont, obj.GetType().ToString() + "\n" + "size: " + obj.ColliderSize + "borders:" + cz.BorderX + ", " + cz.BorderX + "\n" + "offsets: " + cz.Offset, obj.Position + Vector2.One, Vector2.Zero, 0f, 7, 0, Color.White);
-                    }
+                    Raylib.DrawRectangleRec(debugRect, new Color(0, 255, 0, 24));
+                    Raylib.DrawRectangleLinesEx(debugRect, 1.0f, new Color(0, 255, 0, 255));
                 }
                 
             }
             else
             {
                 //draw(non camerazone)
-                Raylib.DrawRectangle((int)debugRect.X, (int)debugRect.Y, (int)debugRect.Width, (int)debugRect.Height, new Color(0, 0, 255, 48));
-                Raylib.DrawRectangleLines((int)debugRect.X, (int)debugRect.Y, (int)debugRect.Width, (int)debugRect.Height, new Color(0, 255, 0, 255));
+                Raylib.DrawRectangleRec(debugRect, new Color(0, 0, 255, 48));
+                Raylib.DrawRectangleLinesEx(debugRect, 1.0f, new Color(0, 255, 0, 255));
+            }
 
-                //label
-                if (Program.DebugText)
-                {
-                    Raylib.DrawTextPro(DebugFont, obj.GetType().ToString() + "\n" + "size: " + obj.ColliderSize, obj.Position + Vector2.One, Vector2.Zero, 0f, 7, 0, Color.White);
-                }
+            
+        }
+
+        if (Program.DebugText)// text loop so regular rects can batch
+        {
+            foreach (var textobj in sorted)
+            {
+                if (textobj is CameraZone textcz && !Program.DebugCameraZones)
+                    continue;
+
+                string label = textobj is CameraZone camz ? $"{textobj.GetType()}\nsize: {textobj.ColliderSize}borders: {camz.BorderX}, {camz.BorderY}\noffsets: {camz.Offset}"
+                    : $"{textobj.GetType()}\nsize: {textobj.ColliderSize}";
+
+                Raylib.DrawTextPro( //shadow for readability
+                        DebugFont,
+                        label,
+                        new Vector2(textobj.Position.X - 1, textobj.Position.Y + 1),
+                        Vector2.Zero,
+                        0f,
+                        7,
+                        0,
+                        Color.Black
+                    );
+
+                Raylib.DrawTextPro(
+                        DebugFont,
+                        label,
+                        textobj.Position,
+                        Vector2.Zero,
+                        0f,
+                        7,
+                        0,
+                        Color.White
+                    );
+
             }
         }
     }

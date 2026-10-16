@@ -38,9 +38,9 @@ class Program
 
         // ---------- ENGINE INITIALIZATION ---------- //
         EngineInit.Initialize(
-            windowTitle: "RAKOON",
-            windowWidth: 640, windowHeight: 360,
-            virtualWidth: 240, virtualHeight: 160,
+            windowTitle: "penis",
+            windowWidth: 1280, windowHeight: 720,
+            virtualWidth: 270, virtualHeight: 180,
             banksFolderPath: "assets/banks/Desktop",
             fontPath: "assets/sprites/rakoon.ttf",
             portraitAtlasPath: "assets/sprites/portraits.png"
@@ -59,7 +59,7 @@ class Program
 
         camera = new GameCamera(screen.Width, screen.Height);
         camera.SetTarget(player);
-        LoadRoom("assets/levels/TestLDTK2", spawnAtDoorId: null);
+        LoadRoom("assets/levels/MoveGym", spawnAtDoorId: null);
 
         camera.SetLevelBounds(level.Width, level.Height, tileset.TileSize);
 
