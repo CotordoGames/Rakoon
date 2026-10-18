@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net10.0</TargetFramework>
 
         <ImplicitUsings>enable</ImplicitUsings>
@@ -16,6 +15,14 @@
 
         <PlatformTarget>AnyCPU</PlatformTarget>
     </PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<OutputType>WinExe</OutputType>
+	</PropertyGroup>
 
     <!-- Select a default RID based on the operating system.
          A RID supplied on the command line or by Rider takes precedence. -->
@@ -61,7 +68,7 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
 
-        <None Include="konfig.exe">
+        <None Include="rk_konfig_setter.exe">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
@@ -73,10 +80,8 @@
 
     <!-- Helpful build message -->
     <Target Name="ShowBuildConfiguration" BeforeTargets="Build">
-        <Message Importance="High"
-                 Text="Building for RuntimeIdentifier: $(RuntimeIdentifier)" />
-        <Message Importance="High"
-                 Text="Native library directory: $(NativeLibDirectory)" />
+        <Message Importance="High" Text="Building for RuntimeIdentifier: $(RuntimeIdentifier)" />
+        <Message Importance="High" Text="Native library directory: $(NativeLibDirectory)" />
     </Target>
 
 </Project>

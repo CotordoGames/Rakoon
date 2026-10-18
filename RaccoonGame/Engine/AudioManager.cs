@@ -84,7 +84,7 @@ public class AudioManager
         RESULT result = studioSystem.getEvent(fullEventPath, out EventDescription eventDesc);
         if(result == RESULT.ERR_EVENT_NOTFOUND)
         {
-            Console.WriteLine($"[Audio Warning] BGM Event not found in banks: {fullEventPath}");
+            EngineDebug.Log($"[Audio Warning] BGM Event not found in banks: {fullEventPath}");
             currentBgmPath = "";
             return;
         }

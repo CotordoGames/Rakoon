@@ -23,20 +23,32 @@ public static class EngineInit
         string configPath = "assets/persistantData/konfig.json"
         )
     {
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.Clear();
+        try
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Clear();
+        }
+        catch (IOException)
+        {
+
+        }
 
         EngineInit.configPath = configPath;
 
-        //create the window and start up raylib in general
-        Raylib.SetConfigFlags(ConfigFlags.ResizableWindow | ConfigFlags.VSyncHint);
-        Raylib.InitWindow(windowWidth, windowHeight, windowTitle);
-        Raylib.SetTargetFPS(60); //deltatime proofed
-
-        Raylib.SetExitKey(KeyboardKey.Null);
-
         //load the settings
         Config = ConfigSettings.LoadOrDefault(configPath);
+
+        int w = Config.WindowWidth > 0 ? Config.WindowWidth : windowWidth;
+        int h = Config.WindowHeight > 0 ? Config.WindowHeight : windowHeight;
+
+        //create the window and start up raylib in general
+        ConfigFlags flags = ConfigFlags.ResizableWindow;
+        if (Config.VSync) flags |= ConfigFlags.VSyncHint;
+        Raylib.SetConfigFlags(flags);
+        Raylib.InitWindow(w, h, windowTitle);
+        Raylib.SetTargetFPS(Config.LimitFPS && Config.FpsCount > 0 ? Config.FpsCount : 0); //deltatime proofed
+
+        Raylib.SetExitKey(KeyboardKey.Null);
 
         //initialize audio with the settings values and the banks path
         Audio.Initialize(banksFolderPath);
@@ -66,5 +78,20 @@ public static class EngineInit
         Screen.Unload();
         Raylib.UnloadFont(Rakoon);
         Raylib.CloseWindow();
+    }
+}
+
+public class EngineDebug
+{
+    public static void Log(string message)
+    {
+        try
+        {
+            Console.WriteLine($"[ENGINE LOG]: {message}");
+        }
+        catch (IOException)
+        {
+            System.Diagnostics.Debug.WriteLine(message);
+        }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Reflection.Metadata;
 using System.Text;
 
 public class Autumn : GameObject
@@ -12,6 +13,7 @@ public class Autumn : GameObject
     public const float RunAcceleration = 8f;
     public const float GroundDrag = 2f;
     public const float GroundFriction = 10f;
+    public float LastAirVelocity = 0f;
 
     //air movement values-- no speed needed now
     public const float AirAcceleration = 5f;
@@ -30,6 +32,8 @@ public class Autumn : GameObject
     //dash
     public bool isDashing = false;
     public float DashSpeed = 4.0f;
+    public const float DashCoolDown = 0.15f;
+    public float DashTimer = DashCoolDown;
 
     //wall jump
     public const float WallSlideMaxSpeed = 1.0f;
@@ -52,7 +56,7 @@ public class Autumn : GameObject
     float squashTimer = 0f;
 
     //health
-    public static HealthSystem health;
+    public static HealthSystem? health;
     public static bool isDead = false;
     static Vector2 deathPos;
     static Vector2 deathVel;
@@ -64,7 +68,7 @@ public class Autumn : GameObject
 
     public Autumn() 
     {
-        health = new HealthSystem(20, HandleDeath, null);
+        health = new HealthSystem(48, HandleDeath, HandleTakeDamage);
     }
 
     //tracks the players state
@@ -133,7 +137,18 @@ public class Autumn : GameObject
 
         state = PlayerState.idle;
 
-        DialogueManager.TriggerDialogue(["heya, dev here.", "this build is simply meant to get feedback on the movement, to dont judge it too much...", "you may press F11 for fullscreen, F1 for debug mode, and keys F2-F4 while in debug to toggle certain features... ciao!"], [0.036f, 0.036f, 0.036f], [-1, -1, -1], true, 48, 2);
+        DialogueManager.TriggerDialogue(
+            [
+            "heya, dev here.",
+
+            "this build is simply meant to get feedback on the movement, to dont judge it too much...",
+
+            "you may press F11 for fullscreen, F1 for debug mode, and keys F2-F4 while in debug to toggle certain features... ciao!"
+
+            ],
+
+            [0.036f, 0.036f, 0.036f], [-1, -1, -1], true, 48, 2);
+
     }
 
     public override void Update(float dt)
@@ -164,14 +179,26 @@ public class Autumn : GameObject
             Velocity.Y *= 0.5f;
         }
 
+        if(!WasGrounded && !IsGrounded)
+        {
+            LastAirVelocity = Velocity.Y;
+        }
+
         if (!WasGrounded && IsGrounded)
         {
-            Program.audio.PlayOneShot("land");
-            squashTimer = 0.036f;
+            if(LastAirVelocity >= 8)
+            {
+                Program.camera.TriggerCameraShake(2.5f, 50, 0.2f);
+                Program.audio.PlayOneShot("landhard");
+            }
+            else
+            {
+                Program.audio.PlayOneShot("land");
+            }
         }
 
         TryStartDash(direction);
-        UpdateDash();
+        UpdateDash(dt);
 
         bool onLadder = false;
         foreach (var obj in CurrentlyColliding)
@@ -194,6 +221,11 @@ public class Autumn : GameObject
                 onLadder = true;
                 break;
             }
+        }
+
+        if (Raylib.IsKeyPressed(KeyboardKey.Space))
+        {
+            health?.TakeDamage(4);
         }
 
         //update the current state to change how the players values get update this frame
@@ -228,6 +260,11 @@ public class Autumn : GameObject
             case PlayerState.dash:
                 Velocity.X = DashSpeed * (Graphic!.FlipX ? -1 : 1);
                 Velocity.Y = 0;
+
+                if (Raylib.IsKeyPressed(KeyboardKey.Z) && isDashing){
+                    isDashing = !isDashing;
+                    DashTimer = DashCoolDown;
+                }
                 break;
 
             case PlayerState.wallSlide:
@@ -332,26 +369,30 @@ public class Autumn : GameObject
 
     void TryStartDash(float direction)
     {
-        if (!Raylib.IsKeyPressed(KeyboardKey.X) || isDashing) return;
+        if (!Raylib.IsKeyPressed(KeyboardKey.X) || isDashing || DashTimer > 0f) return;
         if(Graphic is not AnimatedSprite2D anim) return;
 
         isDashing = true;
+        Program.camera.TriggerCameraShake(2.0f, 50, 0.25f);
         Program.audio.PlayOneShot("dash");
         anim.Play("dash");
     }
 
-    void UpdateDash()
+    void UpdateDash(float deltaTime)
     {
-        if(isDashing && Graphic is AnimatedSprite2D anim && !anim.IsPlaying)
+        if (isDashing && Graphic is AnimatedSprite2D anim && !anim.IsPlaying)
         {
             isDashing = false;
+            DashTimer = DashCoolDown;
         }
+        DashTimer = Math.Max(DashTimer - deltaTime, 0);
     }
 
     void UpdateFacing(float direction)
     {
         if (Graphic == null || direction == 0 || isDashing) return; //no flip mid dash
         Graphic.FlipX = direction < 0;
+        Graphic.FlipY = Velocity.Y > 6.5f;
     }
 
     void UpdateAnimation()
@@ -379,12 +420,13 @@ public class Autumn : GameObject
         deathPos = new Vector2(Program.level.SpawnPoint.X - Program.player.Size.X / 2, Program.level.SpawnPoint.Y - Program.player.Size.Y / 2);
         deathVel = Vector2.Zero;
         Program.audio.PlayOneShot("death");
-        health.FullHeal();
+        health?.FullHeal();
     }
 
     public void HandleTakeDamage()
     {
-
+        Program.camera.TriggerCameraShake(2.5f, 50, 0.36f);
+        Program.audio.PlayOneShot("hurt");
     }
 
     //a math helper function to allow smooth acceleration

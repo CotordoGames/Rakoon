@@ -13,7 +13,15 @@ public static class ObjectManager
     public static List<GameObject> SemiSolids = new List<GameObject>();
     public static List<CameraZone> CameraZones = new List<CameraZone>();
 
-    public static Font DebugFont = Raylib.LoadFontEx("assets/debug.ttf", 7, null, 0);
+    public static Font DebugFont = LoadDebugFont();
+    
+    static Font LoadDebugFont()
+    {
+        Font f = Raylib.LoadFontEx("assets/debug.ttf", 64, null, 0);
+        Raylib.GenTextureMipmaps(ref f.Texture);
+        Raylib.SetTextureFilter(f.Texture, TextureFilter.Trilinear);
+        return f;
+    }
 
     //a function to add an object into the master lists
     public static void AddObject(GameObject obj)
@@ -23,6 +31,7 @@ public static class ObjectManager
         if (obj.IsSolid) Solids.Add(obj);
         if (obj is CameraZone cz) CameraZones.Add(cz);
         if (obj is SemiSolidRect) SemiSolids.Add(obj);
+        if (obj.DebugColor == default) obj.DebugColor = Color.Blue;
         for(int i = 0; i < obj.Components.Count; i++)
         {
             obj.Components[i].Owner = obj; //apply the owner of the components to the owner feild of each
@@ -63,7 +72,18 @@ public static class ObjectManager
                 bool grounded = false;
                 bool wallLeft = false;
                 bool wallRight = false;
-                MoveAndCollide(obj, obj.Velocity.X, obj.Velocity.Y, ref grounded, ref wallLeft, ref wallRight);
+
+                //dt shit
+                float stepX = obj.Velocity.X * deltaTime * 60.0f;
+                float stepY = obj.Velocity.Y * deltaTime * 60.0f;
+
+                int steps = Math.Max(1, (int)MathF.Ceiling(Math.Max(MathF.Abs(stepX), MathF.Abs(stepY)) / 4f));
+                for(int s = 0; s < steps; s++)
+                {
+                    MoveAndCollide(obj, stepX / steps, stepY / steps, ref grounded, ref wallLeft, ref wallRight);
+                }
+
+                //MoveAndCollide(obj, obj.Velocity.X, obj.Velocity.Y, ref grounded, ref wallLeft, ref wallRight);
                 obj.IsGrounded = grounded;
                 obj.IsTouchingWallLeft = wallLeft;
                 obj.IsTouchingWallRight = wallRight;
@@ -73,27 +93,50 @@ public static class ObjectManager
 
         //additional pass in order for objects to "know" what all they are collidion with
 
-        foreach (var a in AllObjects)
+        foreach(var obj in AllObjects)
         {
-            //clear the list of objects that are colliding
-            a.CurrentlyColliding.Clear();
+            obj.CurrentlyColliding.Clear();
+        }
 
-            //dont do anything if the object isnt active
+        for(int i = 0; i < AllObjects.Count; i++)
+        {
+            var a = AllObjects[i];
             if (!a.Active) continue;
 
-            //check all of the objects to see if they collide
-            foreach (var b in AllObjects)
+            for (int j = i + 1; j < AllObjects.Count; j++)
             {
-                //if the object isnt active it isnt colliding
-                if (b == a || !b.Active) continue;
+                var b = AllObjects[j];
+                if(!b.Active) continue;
 
-                //actual collision check
-                if (Raylib.CheckCollisionRecs(a.BoundingBox, b.BoundingBox))
+                if(Raylib.CheckCollisionRecs(a.BoundingBox, b.BoundingBox)) 
                 {
                     a.CurrentlyColliding.Add(b);
+                    b.CurrentlyColliding.Add(a);
                 }
             }
         }
+
+        //foreach (var a in AllObjects)
+        //{
+        //    //clear the list of objects that are colliding
+        //    a.CurrentlyColliding.Clear();
+
+        //    //dont do anything if the object isnt active
+        //    if (!a.Active) continue;
+
+        //    //check all of the objects to see if they collide
+        //    foreach (var b in AllObjects)
+        //    {
+        //        //if the object isnt active it isnt colliding
+        //        if (b == a || !b.Active) continue;
+
+        //        //actual collision check
+        //        if (Raylib.CheckCollisionRecs(a.BoundingBox, b.BoundingBox))
+        //        {
+        //            a.CurrentlyColliding.Add(b);
+        //        }
+        //    }
+        //}
     }
 
     //moves all objects and checks for collisions
@@ -209,10 +252,11 @@ public static class ObjectManager
 
         }
 
+        //handle semisolid collision
         foreach (var semi in SemiSolids)
         {
             if(!semi.Active) continue;
-            if(Raylib.CheckCollisionRecs(groundProbe, semi.BoundingBox) && entity.Velocity.Y == 0)
+            if(Raylib.CheckCollisionRecs(groundProbe, semi.BoundingBox) && entity.Velocity.Y == 0 && groundProbe.Y + groundProbe.Height > semi.BoundingBox.Y)
             {
                 isGrounded = true;
                 break;
@@ -246,7 +290,7 @@ public static class ObjectManager
         }
     }
 
-    public static void DrawDebugWorld(Rectangle cameraView)
+    public static void DrawDebugWorld(Rectangle cameraView, float LineThick)
     {
         var sorted = AllObjects
             .Where(o => o.Active)
@@ -279,15 +323,15 @@ public static class ObjectManager
                 {
                     //draw(camerazone
                     Raylib.DrawRectangleRec(debugRect, new Color(0, 255, 0, 24));
-                    Raylib.DrawRectangleLinesEx(debugRect, 1.0f, new Color(0, 255, 0, 255));
+                    Raylib.DrawRectangleLinesEx(debugRect, LineThick, new Color(0, 255, 0, 255));
                 }
                 
             }
             else
             {
                 //draw(non camerazone)
-                Raylib.DrawRectangleRec(debugRect, new Color(0, 0, 255, 48));
-                Raylib.DrawRectangleLinesEx(debugRect, 1.0f, new Color(0, 255, 0, 255));
+                Raylib.DrawRectangleRec(debugRect, new Color((byte)obj.DebugColor.R, (byte)obj.DebugColor.G, (byte)obj.DebugColor.B, (byte)48));
+                Raylib.DrawRectangleLinesEx(debugRect, LineThick, obj.DebugColor);
             }
 
             
@@ -303,16 +347,16 @@ public static class ObjectManager
                 string label = textobj is CameraZone camz ? $"{textobj.GetType()}\nsize: {textobj.ColliderSize}borders: {camz.BorderX}, {camz.BorderY}\noffsets: {camz.Offset}"
                     : $"{textobj.GetType()}\nsize: {textobj.ColliderSize}";
 
-                Raylib.DrawTextPro( //shadow for readability
-                        DebugFont,
-                        label,
-                        new Vector2(textobj.Position.X - 1, textobj.Position.Y + 1),
-                        Vector2.Zero,
-                        0f,
-                        7,
-                        0,
-                        Color.Black
-                    );
+                //Raylib.DrawTextPro( //shadow for readability
+                //        DebugFont,
+                //        label,
+                //        new Vector2(textobj.Position.X - 1, textobj.Position.Y + 1),
+                //        Vector2.Zero,
+                //        0f,
+                //        4,
+                //        0,
+                //        Color.Black
+                //    );
 
                 Raylib.DrawTextPro(
                         DebugFont,
@@ -320,7 +364,7 @@ public static class ObjectManager
                         textobj.Position,
                         Vector2.Zero,
                         0f,
-                        7,
+                        4,
                         0,
                         Color.White
                     );

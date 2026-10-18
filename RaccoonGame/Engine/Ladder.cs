@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 using System.Text.Json;
+using Raylib_cs;
 
 public class Ladder : GameObject
 {
@@ -11,6 +12,7 @@ public class Ladder : GameObject
     {
         IsSolid = false;
         CanMove = false;
+        DebugColor = Color.Yellow;
     }
 
     //just needs to be here

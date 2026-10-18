@@ -12,6 +12,11 @@ public class ConfigSettings
     public float SfxVolume = 0.5f;
     public bool StartFullScreen = false;
     public bool YuriMode = false;
+    public bool VSync = true;
+    public bool LimitFPS = true;
+    public int FpsCount = 60;
+    public int WindowWidth = 1080;
+    public int WindowHeight = 720;
 
     public ConfigSettings() { } //evil default constructor
 
@@ -32,12 +37,17 @@ public class ConfigSettings
                 MusicVolume = conf.MusicVolume,
                 SfxVolume = conf.SfxVolume,
                 StartFullScreen = conf.StartFullScreen,
-                YuriMode = conf.YuriMode
+                YuriMode = conf.YuriMode,
+                VSync = conf.VSync,
+                LimitFPS = conf.LimitFPS,
+                FpsCount = conf.FpsCount,
+                WindowWidth = conf.WindowWidth,
+                WindowHeight = conf.WindowHeight
             };
         }
         catch(Exception ex)
         {
-            Console.WriteLine($"[Config] Failed to parse {path}: {ex.Message} -- using defaults");
+            EngineDebug.Log($"[Config] Failed to parse {path}: {ex.Message} -- using defaults");
             return new ConfigSettings();
         }
 
@@ -56,7 +66,8 @@ public class ConfigSettings
         var meta = new ConfigMeta
         {
             MasterVolume = MasterVolume, MusicVolume = MusicVolume, SfxVolume = SfxVolume,
-            StartFullScreen = StartFullScreen, YuriMode = YuriMode
+            StartFullScreen = StartFullScreen, YuriMode = YuriMode, VSync = VSync, FpsCount = FpsCount,
+            LimitFPS = LimitFPS, WindowWidth = WindowWidth, WindowHeight = WindowHeight
         };
 
         //File.WriteAllText(path, JsonSerializer.Serialize(meta, new JsonSerializerOptions { WriteIndented = true }));
@@ -74,4 +85,9 @@ public class ConfigMeta
     public float SfxVolume = 0.5f;
     public bool StartFullScreen = false;
     public bool YuriMode = false;
+    public bool VSync = true;
+    public bool LimitFPS = true;
+    public int FpsCount = 60;
+    public int WindowWidth = 1080;
+    public int WindowHeight = 720;
 }

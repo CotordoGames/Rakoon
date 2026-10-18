@@ -25,7 +25,7 @@
     "name": "camera_zone",
     "x": 0,
     "y": 0,
-    "width": 608,
+    "width": 576,
     "height": 224,
     "offsetX": 48,
     "offsetY": 0,
@@ -34,10 +34,10 @@
   },
   {
     "name": "camera_zone",
-    "x": 640,
-    "y": 224,
+    "x": 608,
+    "y": 32,
     "width": 32,
-    "height": 64,
+    "height": 256,
     "offsetX": 0,
     "offsetY": 0,
     "borderX": false,
@@ -62,6 +62,17 @@
     "height": 32,
     "offsetX": 0,
     "offsetY": 48,
+    "borderX": false,
+    "borderY": false
+  },
+  {
+    "name": "camera_zone",
+    "x": 864,
+    "y": 288,
+    "width": 384,
+    "height": 32,
+    "offsetX": 0,
+    "offsetY": 0,
     "borderX": false,
     "borderY": false
   },
@@ -308,15 +319,6 @@
     "width": 8,
     "height": 8,
     "BounceHeight": 6
-  },
-  {
-    "name": "door",
-    "x": 64,
-    "y": 528,
-    "width": 16,
-    "height": 16,
-    "room": "",
-    "DoorId": ""
   },
   {
     "name": "solid_rect",

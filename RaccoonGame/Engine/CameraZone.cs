@@ -19,7 +19,6 @@ public class CameraZone : GameObject
     public bool BorderY;
 
     //runtime
-    float? capturedX, capturedY;
     float? ratchetX, ratchetY;
 
     public override void Start()

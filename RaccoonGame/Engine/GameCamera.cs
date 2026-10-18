@@ -82,7 +82,55 @@ public class GameCamera
         Position = new Vector2(
             float.Lerp(Position.X, desired.X, Smoothing.X * deltaTime * 60),
             float.Lerp(Position.Y, desired.Y, Smoothing.Y * deltaTime * 60));
+
+        UpdateShake(deltaTime);
     }
+
+    float ambientIntensity, ambientSpeed;
+    float triggerIntensity, triggerSpeed, triggerDuration, triggerTime;
+    float shakeClock;
+    public Vector2 ShakeOffset;
+
+    public void TriggerCameraShake(float intensity, float speed, float duration)
+    {
+        triggerIntensity = intensity;
+        triggerSpeed = speed;
+        triggerDuration = duration;
+        triggerTime = duration;
+    }
+
+    public void SetCameraAmbientShake(float intensity, float speed)
+    {
+        ambientIntensity = intensity;
+        ambientSpeed = speed;
+    }
+
+    void UpdateShake(float deltaTime)
+    {
+        shakeClock += deltaTime;
+        Vector2 offset = Vector2.Zero;
+
+        if (ambientIntensity > 0)
+            offset += Noise(shakeClock * ambientSpeed, 0f) * ambientIntensity;
+
+        if(triggerTime  > 0)
+        {
+            triggerTime -= deltaTime;
+            float falloff = Math.Clamp(triggerTime / triggerDuration, 0f, 1f);
+            offset += Noise(shakeClock * triggerSpeed, 100f) * triggerIntensity * falloff;
+        }
+
+        ShakeOffset = offset;
+    }
+
+    // smooth-ish pseudo-random value in [-1, 1] per axis
+    static Vector2 Noise(float t, float seed)
+    {
+        return new Vector2(
+            MathF.Sin(t * 1.0f + seed) * 0.6f + MathF.Sin(t * 2.3f + seed * 1.7f) * 0.4f,
+            MathF.Sin(t * 1.3f + seed + 50f) * 0.6f + MathF.Sin(t * 2.9f + seed * 2.1f) * 0.4f);
+    }
+
 
     //get the viewports transform
     public Rectangle GetViewRect() => new Rectangle(Position.X, Position.Y, ViewWidth, ViewHeight);
@@ -90,7 +138,7 @@ public class GameCamera
     //the actual camera
     public Camera2D RaylibCamera => new Camera2D
     {
-        Target = Vector2.Round(Position),
+        Target = Vector2.Round(Position + ShakeOffset),
         Offset = Vector2.Zero,
         Rotation = 0.0f,
         Zoom = 1f

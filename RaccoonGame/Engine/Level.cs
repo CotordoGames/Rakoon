@@ -97,10 +97,7 @@ public class Level
                 GameObject? obj = ObjectRegistry.Create(name);
                 if(obj == null)
                 {
-                    //spooky red error
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"Warning: unrecognized object '{name}' in {objPath}, skipped.");
-                    Console.ForegroundColor = ConsoleColor.Green;
+                    EngineDebug.Log($"Warning: unrecognized object '{name}' in {objPath}, skipped.");
                     continue;
                 }
 
@@ -111,6 +108,8 @@ public class Level
 
             }
         }
+
+        Raylib.SetWindowTitle($"Autumn the Rakoon -- {level.Name} by {level.Author}");
 
         //return the level
         return level;

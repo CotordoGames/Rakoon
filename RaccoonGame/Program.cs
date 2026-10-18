@@ -23,7 +23,7 @@ class Program
 
     static Tileset tileset = null!;
     static List<Texture2D> bgTextures = new List<Texture2D>();
-    static GameCamera camera = null!;
+    public static GameCamera camera = null!;
 
     //player health bar
     public static HealthBar PlayerHealthBar = new HealthBar(Autumn.health);
@@ -32,13 +32,12 @@ class Program
 
 
 
-    static void Main()
+    static void Main(string[] args)
     {
-
 
         // ---------- ENGINE INITIALIZATION ---------- //
         EngineInit.Initialize(
-            windowTitle: "penis",
+            windowTitle: "Autumn the Rakoon -- intro",
             windowWidth: 1280, windowHeight: 720,
             virtualWidth: 270, virtualHeight: 180,
             banksFolderPath: "assets/banks/Desktop",
@@ -59,7 +58,15 @@ class Program
 
         camera = new GameCamera(screen.Width, screen.Height);
         camera.SetTarget(player);
-        LoadRoom("assets/levels/MoveGym", spawnAtDoorId: null);
+
+        if (args.Length == 0)
+        {
+            LoadRoom("assets/levels/MoveGym", spawnAtDoorId: null);
+        }
+        else
+        {
+            LoadRoom(args[0], spawnAtDoorId: null);
+        }
 
         camera.SetLevelBounds(level.Width, level.Height, tileset.TileSize);
 
@@ -154,10 +161,10 @@ class Program
         LevelRenderer.DrawLayer(level, level.Layer2, tileset, currentCameraView);
 
         //draw collisions if we must
-        if (Debug)
-        {
-            ObjectManager.DrawDebugWorld(currentCameraView);
-        }
+        //if (Debug)
+        //{
+        //    ObjectManager.DrawDebugWorld(currentCameraView);
+        //}
 
         Raylib.EndMode2D();
 
@@ -189,11 +196,30 @@ class Program
 
         Raylib.DrawTexturePro(screen.Target.Texture, screen.SourceRect, screen.DestRect, Vector2.Zero, 0.0f, Color.White);
 
+        if (Debug)
+        {
+            float scale = screen.DestRect.Width / screen.Width;
+
+            Camera2D dbgCam = camera.RaylibCamera;
+            dbgCam.Zoom *= scale;
+            dbgCam.Offset = new Vector2(screen.DestRect.X, screen.DestRect.Y) + dbgCam.Offset * scale;
+
+            Raylib.BeginScissorMode((int)screen.DestRect.X, (int)screen.DestRect.Y, (int)screen.DestRect.Width, (int)screen.DestRect.Height);
+
+            Raylib.BeginMode2D(dbgCam);
+            ObjectManager.DrawDebugWorld(currentCameraView, 2f / dbgCam.Zoom);
+            Raylib.EndMode2D();
+
+            Raylib.EndScissorMode();
+        }
+
         if (Debug && DebugOverlay)
         {
-            Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth() / 8, Raylib.GetScreenHeight(), new Color(0, 0, 0, 128));
-            Raylib.DrawText(Raylib.GetFPS().ToString(), 0, 0, Raylib.GetScreenHeight() / 45, new Color(0, 255, 0, 255));
-            Raylib.DrawText($"Player Velocity:\nX: {player.Velocity.X}\nY: {player.Velocity.Y}", 0, Raylib.GetScreenHeight() / 45, Raylib.GetScreenHeight() / 45, new Color(0, 255, 0, 255));
+            Raylib.DrawRectangle((int)screen.DestRect.X, (int)screen.DestRect.Y, (int)screen.DestRect.Width / 8, (int)screen.DestRect.Height, new Color(0, 0, 0, 128));
+            Raylib.DrawTextEx(ObjectManager.DebugFont, Raylib.GetFPS().ToString(), new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
+            Raylib.DrawTextEx(ObjectManager.DebugFont, $"Player Velocity:\nX: {player.Velocity.X}\nY: {player.Velocity.Y}", new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y + Raylib.GetScreenHeight() / 45), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
+            Raylib.DrawTextEx(ObjectManager.DebugFont, $"Object Count: \n{ObjectManager.AllObjects.Count}", new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y + (Raylib.GetScreenHeight() / 45) * 4), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
+
         }
 
         Raylib.EndDrawing();
@@ -201,7 +227,9 @@ class Program
 
     public static void Death()
     {
-        player.HandleDeath();
+        audio.PlayOneShot("spring");
+        Autumn.health?.TakeDamage(16);
+        player.Velocity.Y = -10;
     }
 
     public static void LoadBackgrounds()

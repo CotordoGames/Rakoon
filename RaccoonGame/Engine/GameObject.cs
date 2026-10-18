@@ -35,7 +35,7 @@ public abstract class GameObject
 
     //graphics
     public Drawable? Graphic { get; set; } = null;
-    public Color DebugColor { get; set; } = Color.Magenta;
+    public Color DebugColor { get; set; } = Color.Blue;
 
     //the collider
     public Rectangle BoundingBox => new Rectangle(

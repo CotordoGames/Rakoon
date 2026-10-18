@@ -10,6 +10,7 @@ public class SemiSolidRect : GameObject
     public override void Start()
     {
         IsSolid = false; //this isnt normal collision
+        DebugColor = Color.Magenta;
     }
 
     public override void Update(float deltaTime)

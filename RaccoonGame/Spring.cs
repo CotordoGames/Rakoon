@@ -49,7 +49,7 @@ public class Spring : GameObject
             }
         }
 
-        if (!anim.IsPlaying)
+        if (anim != null && !anim.IsPlaying)
         {
             anim.Play("default", restart: true);
         }
@@ -60,7 +60,7 @@ public class Spring : GameObject
         if(TryGetPropertyCI(json, "BounceHeight", out var bh))
         {
             BounceHeight = bh.GetSingle();
-            Console.WriteLine(bh.GetSingle());
+            EngineDebug.Log(bh.GetSingle().ToString());
         }
     }
 }

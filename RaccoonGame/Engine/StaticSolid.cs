@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Numerics;
 using System.Text.Json;
+using Raylib_cs;
 
 public class StaticSolid : GameObject
 {
@@ -10,6 +11,7 @@ public class StaticSolid : GameObject
     {
         IsSolid = true;
         //no graphic needed
+        DebugColor = Color.Red;
     }
 
     public override void Update(float deltaTime)

@@ -33,7 +33,7 @@ public class NPC : GameObject
         {
             if(obj is Autumn && Raylib.IsKeyPressed(KeyboardKey.Up))
             {
-                Console.WriteLine("talk");
+                EngineDebug.Log("talk");
                 DialogueManager.TriggerDialogue(lines, speeds, portraits, openingAnimation);
                 break;
             }

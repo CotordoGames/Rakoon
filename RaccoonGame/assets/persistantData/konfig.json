@@ -1,7 +1,12 @@
 {
-    "MasterVolume": 0.3461538553237915,
+    "FpsCount": 60,
+    "LimitFPS": true,
+    "MasterVolume": 0.1,
     "MusicVolume": 1.0,
     "SfxVolume": 1.0,
     "StartFullScreen": false,
+    "VSync": true,
+    "WindowHeight": 720,
+    "WindowWidth": 1080,
     "YuriMode": false
 }

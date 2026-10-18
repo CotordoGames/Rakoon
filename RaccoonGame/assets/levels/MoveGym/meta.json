@@ -1,17 +1,23 @@
 {
   "name": "MoveGym",
-  "author": "",
+  "author": "Djalroid",
   "version": 1,
   "width": 160,
   "height": 76,
   "bgm": "rakoon_exercise",
   "bgImages": [
-    "bg_block.png"
+    "bg_block.png",
+    "bg_block_2.png"
   ],
   "bgSpeeds": [
+    0.125,
     0.25
   ],
   "bgOffsets": [
+    {
+      "x": 0,
+      "y": 0
+    },
     {
       "x": 0,
       "y": 0
