@@ -32,7 +32,7 @@ public class Autumn : GameObject
     //dash
     public bool isDashing = false;
     public float DashSpeed = 4.0f;
-    public const float DashCoolDown = 0.15f;
+    public const float DashCoolDown = 0.25f;
     public float DashTimer = DashCoolDown;
 
     //wall jump
@@ -147,7 +147,17 @@ public class Autumn : GameObject
 
             ],
 
-            [0.036f, 0.036f, 0.036f], [-1, -1, -1], true, 48, 2);
+            [0.036f, 0.036f, 0.036f],
+
+            [-1, -1, -1],
+
+            true,
+
+            48,
+
+            2
+
+            );
 
     }
 
@@ -163,18 +173,19 @@ public class Autumn : GameObject
         }
 
         //update the current direction each frame
-        float direction = Raylib.IsKeyDown(KeyboardKey.Right) - Raylib.IsKeyDown(KeyboardKey.Left);
+        float directionX = Raylib.IsKeyDown(EngineInit.Config.Right) - Raylib.IsKeyDown(EngineInit.Config.Left);
+        float directionY = Raylib.IsKeyDown(EngineInit.Config.Down) - Raylib.IsKeyDown(EngineInit.Config.Up);
 
         //update the wall jump lock timer
-        if(wallJumpLockTimer > 0f) wallJumpLockTimer -= dt;
+        if (wallJumpLockTimer > 0f) wallJumpLockTimer -= dt;
 
         //update coyote time and jump buffer
         coyoteTimer = IsGrounded ? CoyoteTime : coyoteTimer - dt;
-        jumpBufferTimer = Raylib.IsKeyPressed(KeyboardKey.Z) ? JumpBufferTime : jumpBufferTimer - dt;
+        jumpBufferTimer = Raylib.IsKeyPressed(EngineInit.Config.Jump) ? JumpBufferTime : jumpBufferTimer - dt;
 
 
         //cut velocity for when the player releases the jump key
-        if(Raylib.IsKeyReleased(KeyboardKey.Z) && Velocity.Y < 0f)
+        if(Raylib.IsKeyReleased(EngineInit.Config.Jump) && Velocity.Y < 0f)
         {
             Velocity.Y *= 0.5f;
         }
@@ -197,7 +208,7 @@ public class Autumn : GameObject
             }
         }
 
-        TryStartDash(direction);
+        TryStartDash(directionX);
         UpdateDash(dt);
 
         bool onLadder = false;
@@ -207,7 +218,7 @@ public class Autumn : GameObject
             {
                 var spring = (Spring)obj;
                 Program.audio.PlayOneShot("spring");
-                if (Raylib.IsKeyDown(KeyboardKey.Z))
+                if (Raylib.IsKeyDown(EngineInit.Config.Jump))
                 {
                     Velocity.Y = -spring.BounceHeight * 1.25f;
                 }
@@ -216,20 +227,20 @@ public class Autumn : GameObject
                     Velocity.Y = -spring.BounceHeight;
                 }
             }
-            if (obj is Ladder && Raylib.IsKeyDown(KeyboardKey.Up))
+            if (obj is Ladder && Raylib.IsKeyDown(EngineInit.Config.Up))
             {
                 onLadder = true;
                 break;
             }
         }
 
-        if (Raylib.IsKeyPressed(KeyboardKey.Space))
+        if (Raylib.IsKeyPressed(EngineInit.Config.Hurt))
         {
             health?.TakeDamage(4);
         }
 
         //update the current state to change how the players values get update this frame
-        DetermineState(direction, onLadder);
+        DetermineState(directionX, onLadder);
 
         switch (state)
         {
@@ -239,21 +250,21 @@ public class Autumn : GameObject
 
             case PlayerState.walk:
                 if (IsGrounded) CurrentJumps = Jumps;
-                GroundMove(direction, WalkAcceleration, dt);
+                GroundMove(directionX, WalkAcceleration, dt);
                 break;
 
             case PlayerState.run:
                 if (IsGrounded) CurrentJumps = Jumps;
-                GroundMove(direction, RunAcceleration, dt);
+                GroundMove(directionX, RunAcceleration, dt);
                 break;
 
             case PlayerState.jump:
-                AirMove(direction, dt);
+                AirMove(directionX, dt);
                 ApplyGravity(dt);
                 break;
 
             case PlayerState.fall:
-                AirMove(direction, dt);
+                AirMove(directionX, dt);
                 ApplyGravity(dt);
                 break;
 
@@ -261,7 +272,7 @@ public class Autumn : GameObject
                 Velocity.X = DashSpeed * (Graphic!.FlipX ? -1 : 1);
                 Velocity.Y = 0;
 
-                if (Raylib.IsKeyPressed(KeyboardKey.Z) && isDashing){
+                if (Raylib.IsKeyPressed(EngineInit.Config.Jump) && isDashing){
                     isDashing = !isDashing;
                     DashTimer = DashCoolDown;
                 }
@@ -274,7 +285,7 @@ public class Autumn : GameObject
                 break;
 
             case PlayerState.climb:
-                float vertical = (Raylib.IsKeyDown(KeyboardKey.Down) ? 1 : 0) - (Raylib.IsKeyDown(KeyboardKey.Up) ? 1 : 0);
+                float vertical = (Raylib.IsKeyDown(EngineInit.Config.Down) ? 1 : 0) - (Raylib.IsKeyDown(EngineInit.Config.Up) ? 1 : 0);
                 Velocity.Y = vertical * ClimbSpeed;
                 Velocity.X = 0;
                 break;
@@ -286,7 +297,7 @@ public class Autumn : GameObject
         }
 
         TryJump();
-        UpdateFacing(direction);
+        UpdateFacing(directionX);
         UpdateAnimation();
         UpdateSquashStretch(dt);
 
@@ -295,7 +306,7 @@ public class Autumn : GameObject
 
     void DetermineState(float Direction, bool onLadder)
     {
-        if(onLadder && (Raylib.IsKeyDown(KeyboardKey.Up) || Raylib.IsKeyDown(KeyboardKey.Down)))
+        if(onLadder && (Raylib.IsKeyDown(EngineInit.Config.Up) || Raylib.IsKeyDown(EngineInit.Config.Down)))
         {
             state = PlayerState.climb;
             wallSliding = false;
@@ -306,7 +317,7 @@ public class Autumn : GameObject
         if (IsGrounded)
         {
             wallSliding = false;
-            state = Direction == 0 ? PlayerState.idle : Raylib.IsKeyDown(KeyboardKey.LeftShift) ? PlayerState.run : PlayerState.walk;
+            state = Direction == 0 ? PlayerState.idle : Raylib.IsKeyDown(EngineInit.Config.Run) ? PlayerState.run : PlayerState.walk;
             return;
         }
 
@@ -369,7 +380,7 @@ public class Autumn : GameObject
 
     void TryStartDash(float direction)
     {
-        if (!Raylib.IsKeyPressed(KeyboardKey.X) || isDashing || DashTimer > 0f) return;
+        if (!Raylib.IsKeyPressed(EngineInit.Config.Dash) || isDashing || DashTimer > 0f) return;
         if(Graphic is not AnimatedSprite2D anim) return;
 
         isDashing = true;

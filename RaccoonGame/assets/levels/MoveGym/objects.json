@@ -8,7 +8,7 @@
     "offsetX": 48,
     "offsetY": 0,
     "borderX": true,
-    "borderY": true
+    "borderY": false
   },
   {
     "name": "camera_zone",
@@ -71,6 +71,94 @@
     "y": 288,
     "width": 384,
     "height": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "borderX": false,
+    "borderY": false
+  },
+  {
+    "name": "camera_zone",
+    "x": 1248,
+    "y": 448,
+    "width": 32,
+    "height": 96,
+    "offsetX": 0,
+    "offsetY": 0,
+    "borderX": false,
+    "borderY": false
+  },
+  {
+    "name": "camera_zone",
+    "x": 1632,
+    "y": 288,
+    "width": 96,
+    "height": 16,
+    "offsetX": 0,
+    "offsetY": -48,
+    "borderX": false,
+    "borderY": false
+  },
+  {
+    "name": "camera_zone",
+    "x": 1600,
+    "y": 320,
+    "width": 32,
+    "height": 32,
+    "offsetX": 0,
+    "offsetY": 0,
+    "borderX": false,
+    "borderY": false
+  },
+  {
+    "name": "camera_zone",
+    "x": 1728,
+    "y": 0,
+    "width": 544,
+    "height": 192,
+    "offsetX": 48,
+    "offsetY": 0,
+    "borderX": false,
+    "borderY": true
+  },
+  {
+    "name": "camera_zone",
+    "x": 2336,
+    "y": 96,
+    "width": 32,
+    "height": 64,
+    "offsetX": 0,
+    "offsetY": 0,
+    "borderX": false,
+    "borderY": false
+  },
+  {
+    "name": "camera_zone",
+    "x": 1856,
+    "y": 400,
+    "width": 480,
+    "height": 208,
+    "offsetX": -48,
+    "offsetY": 32,
+    "borderX": false,
+    "borderY": false
+  },
+  {
+    "name": "camera_zone",
+    "x": 1760,
+    "y": 192,
+    "width": 576,
+    "height": 208,
+    "offsetX": 0,
+    "offsetY": 0,
+    "borderX": false,
+    "borderY": false
+  },
+  {
+    "name": "camera_zone",
+    "x": 992,
+    "y": 32,
+    "width": 96,
+    "height": 64,
     "offsetX": 0,
     "offsetY": 0,
     "borderX": false,
@@ -206,7 +294,7 @@
     "name": "solid_rect",
     "x": 32,
     "y": 0,
-    "width": 1248,
+    "width": 2528,
     "height": 32
   },
   {
@@ -351,9 +439,9 @@
   {
     "name": "solid_rect",
     "x": 1248,
-    "y": 32,
+    "y": 96,
     "width": 32,
-    "height": 576
+    "height": 352
   },
   {
     "name": "solid_rect",
@@ -414,5 +502,435 @@
     "width": 8,
     "height": 8,
     "BounceHeight": 6
+  },
+  {
+    "name": "solid_rect",
+    "x": 1248,
+    "y": 544,
+    "width": 32,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 2528,
+    "y": 32,
+    "width": 32,
+    "height": 576
+  },
+  {
+    "name": "solid_rect",
+    "x": 1280,
+    "y": 320,
+    "width": 96,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 1344,
+    "y": 32,
+    "width": 32,
+    "height": 256
+  },
+  {
+    "name": "solid_rect",
+    "x": 1504,
+    "y": 352,
+    "width": 160,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 1632,
+    "y": 384,
+    "width": 32,
+    "height": 224
+  },
+  {
+    "name": "solid_rect",
+    "x": 1376,
+    "y": 544,
+    "width": 192,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 1600,
+    "y": 32,
+    "width": 32,
+    "height": 288
+  },
+  {
+    "name": "solid_rect",
+    "x": 1728,
+    "y": 128,
+    "width": 128,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 1728,
+    "y": 160,
+    "width": 32,
+    "height": 160
+  },
+  {
+    "name": "solid_rect",
+    "x": 1792,
+    "y": 288,
+    "width": 32,
+    "height": 160
+  },
+  {
+    "name": "solid_rect",
+    "x": 1824,
+    "y": 400,
+    "width": 32,
+    "height": 208
+  },
+  {
+    "name": "solid_rect",
+    "x": 1728,
+    "y": 384,
+    "width": 64,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 1888,
+    "y": 256,
+    "width": 64,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 2016,
+    "y": 256,
+    "width": 64,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 2144,
+    "y": 256,
+    "width": 64,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 2272,
+    "y": 32,
+    "width": 256,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 2432,
+    "y": 96,
+    "width": 96,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 2400,
+    "y": 192,
+    "width": 128,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 2368,
+    "y": 256,
+    "width": 128,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 2400,
+    "y": 320,
+    "width": 128,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 2272,
+    "y": 160,
+    "width": 96,
+    "height": 64
+  },
+  {
+    "name": "solid_rect",
+    "x": 2240,
+    "y": 320,
+    "width": 96,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 2336,
+    "y": 224,
+    "width": 32,
+    "height": 224
+  },
+  {
+    "name": "solid_rect",
+    "x": 2336,
+    "y": 512,
+    "width": 192,
+    "height": 96
+  },
+  {
+    "name": "solid_rect",
+    "x": 1912,
+    "y": 128,
+    "width": 24,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2008,
+    "y": 160,
+    "width": 24,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2104,
+    "y": 128,
+    "width": 24,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2200,
+    "y": 160,
+    "width": 24,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2208,
+    "y": 368,
+    "width": 8,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2144,
+    "y": 384,
+    "width": 8,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2080,
+    "y": 368,
+    "width": 8,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2016,
+    "y": 384,
+    "width": 8,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1952,
+    "y": 368,
+    "width": 8,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 1912,
+    "y": 384,
+    "width": 8,
+    "height": 8
+  },
+  {
+    "name": "ladder",
+    "x": 1448,
+    "y": 352,
+    "width": 8,
+    "height": 96
+  },
+  {
+    "name": "ladder",
+    "x": 1512,
+    "y": 448,
+    "width": 8,
+    "height": 96
+  },
+  {
+    "name": "spring",
+    "x": 1920,
+    "y": 120,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 2016,
+    "y": 152,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 2112,
+    "y": 120,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 2208,
+    "y": 152,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 1912,
+    "y": 376,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 1952,
+    "y": 360,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 2016,
+    "y": 376,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 2080,
+    "y": 360,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 2144,
+    "y": 376,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "spring",
+    "x": 2208,
+    "y": 360,
+    "width": 8,
+    "height": 8,
+    "BounceHeight": 6
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 1376,
+    "y": 352,
+    "width": 128,
+    "height": 8
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 1440,
+    "y": 448,
+    "width": 128,
+    "height": 8
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 1888,
+    "y": 480,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 1984,
+    "y": 448,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 2080,
+    "y": 480,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 2144,
+    "y": 448,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "semisolid_rect",
+    "x": 2240,
+    "y": 480,
+    "width": 32,
+    "height": 8
+  },
+  {
+    "name": "solid_rect",
+    "x": 2400,
+    "y": 416,
+    "width": 96,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 1856,
+    "y": 448,
+    "width": 32,
+    "height": 64
+  },
+  {
+    "name": "npc",
+    "x": 1440,
+    "y": 528,
+    "width": 16,
+    "height": 16,
+    "flipX": true,
+    "text": [
+      "caio!\n...\nngl i dont have much to say this is just to test the textbox.",
+      "i mean, like not even a semi normal conversation?\nour dev is a lazy fuck!!",
+      "FUCK YOU DJ !!!!",
+      "*fuck you DJ starts playing*"
+    ],
+    "speeds": [
+      0.036,
+      0.036,
+      0.036,
+      0.036
+    ],
+    "portraits": [
+      10,
+      3,
+      9,
+      -1
+    ],
+    "openingAnimation": true,
+    "sprite": "cubon.png"
   }
 ]

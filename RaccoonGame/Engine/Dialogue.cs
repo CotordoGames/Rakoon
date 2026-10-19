@@ -131,20 +131,27 @@ public static class DialogueManager
         var box = Active!;
         int textW = box.W - 8 - (box.Portraits[lineIndex] >= 0 ? PortraitSize + 6 : 0);
         string current = "";
-        foreach(var word in box.Lines[lineIndex].Split(' '))
+
+        foreach(var paragraph in box.Lines[lineIndex].Split("\n"))
         {
-            //see if the line is too long
-            string test = current.Length == 0 ? word : current + " " + word;
-            if(Raylib.MeasureTextEx(Program.Rakoon, test, 10f, 0f).X > textW)
+            foreach (var word in paragraph.Split(' '))
             {
-                //split that shit up
-                wrappedLines.Add(current);
-                current = word;
+                //see if the line is too long
+                string test = current.Length == 0 ? word : current + " " + word;
+                if (Raylib.MeasureTextEx(Program.Rakoon, test, 10f, 0f).X > textW && current.Length > 0)
+                {
+                    //split that shit up
+                    wrappedLines.Add(current);
+                    current = word;
+                }
+                else
+                {
+                    current = test;
+                }
             }
-            else
-            {
-                current = test;
-            }
+
+            wrappedLines.Add(current);
+            current = "";
         }
         wrappedLines.Add(current);
     }
@@ -201,7 +208,7 @@ public static class DialogueManager
         }
 
         //advance on Z presses
-        if (Raylib.IsKeyPressed(KeyboardKey.Z))
+        if (Raylib.IsKeyPressed(EngineInit.Config.Confirm))
         {
             if (!waitingOnPlayer)
             {

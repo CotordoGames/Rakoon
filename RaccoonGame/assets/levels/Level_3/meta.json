@@ -1,0 +1,32 @@
+{
+  "name": "Level_3",
+  "author": "Dean",
+  "version": 1,
+  "width": 320,
+  "height": 76,
+  "bgm": "rakoon",
+  "bgImages": [
+    "bg_block.png",
+    "bg_block_2.png"
+  ],
+  "bgSpeeds": [
+    0.25,
+    0.5
+  ],
+  "bgOffsets": [
+    {
+      "x": 0,
+      "y": 0
+    },
+    {
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "tileset": "blocks",
+  "spawnPoint": {
+    "x": 64,
+    "y": 528
+  },
+  "hasSpawnPoint": true
+}

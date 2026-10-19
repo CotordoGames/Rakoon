@@ -41,6 +41,8 @@ public static class EngineInit
         int w = Config.WindowWidth > 0 ? Config.WindowWidth : windowWidth;
         int h = Config.WindowHeight > 0 ? Config.WindowHeight : windowHeight;
 
+
+
         //create the window and start up raylib in general
         ConfigFlags flags = ConfigFlags.ResizableWindow;
         if (Config.VSync) flags |= ConfigFlags.VSyncHint;

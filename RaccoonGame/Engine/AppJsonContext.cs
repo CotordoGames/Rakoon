@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-[JsonSourceGenerationOptions(PropertyNameCaseInsensitive = true, IncludeFields = true)]
+[JsonSourceGenerationOptions(PropertyNameCaseInsensitive = true, IncludeFields = true, UseStringEnumConverter = true, WriteIndented = true)]
 [JsonSerializable(typeof(LevelMeta))]
 [JsonSerializable(typeof(MusicMeta))]
 [JsonSerializable(typeof(ConfigMeta))]

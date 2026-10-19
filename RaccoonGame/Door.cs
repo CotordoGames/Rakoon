@@ -37,7 +37,7 @@ public class Door : GameObject
 
         foreach(var obj in CurrentlyColliding)
         {
-            if(obj is Autumn && Raylib.IsKeyPressed(KeyboardKey.Up))
+            if(obj is Autumn && Raylib.IsKeyPressed(EngineInit.Config.Up))
             {
                 LevelManager.RequestTransition(Room, DoorId);
                 break;

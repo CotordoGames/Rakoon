@@ -70,8 +70,6 @@ class Program
 
         camera.SetLevelBounds(level.Width, level.Height, tileset.TileSize);
 
-
-
         // ---------- MAIN LOOP ---------- //
         while (!Raylib.WindowShouldClose())
         {
@@ -215,10 +213,10 @@ class Program
 
         if (Debug && DebugOverlay)
         {
-            Raylib.DrawRectangle((int)screen.DestRect.X, (int)screen.DestRect.Y, (int)screen.DestRect.Width / 8, (int)screen.DestRect.Height, new Color(0, 0, 0, 128));
+            Raylib.DrawRectangle((int)screen.DestRect.X, (int)screen.DestRect.Y, (int)screen.DestRect.Width / 6, (int)screen.DestRect.Height, new Color(0, 0, 0, 140));
             Raylib.DrawTextEx(ObjectManager.DebugFont, Raylib.GetFPS().ToString(), new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
             Raylib.DrawTextEx(ObjectManager.DebugFont, $"Player Velocity:\nX: {player.Velocity.X}\nY: {player.Velocity.Y}", new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y + Raylib.GetScreenHeight() / 45), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
-            Raylib.DrawTextEx(ObjectManager.DebugFont, $"Object Count: \n{ObjectManager.AllObjects.Count}", new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y + (Raylib.GetScreenHeight() / 45) * 4), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
+            Raylib.DrawTextEx(ObjectManager.DebugFont, $"Object Count: \n{ObjectManager.AllObjects.Count}\n{player.DashTimer}", new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y + (Raylib.GetScreenHeight() / 45) * 4), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
 
         }
 
@@ -227,7 +225,6 @@ class Program
 
     public static void Death()
     {
-        audio.PlayOneShot("spring");
         Autumn.health?.TakeDamage(16);
         player.Velocity.Y = -10;
     }

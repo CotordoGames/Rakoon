@@ -49,7 +49,7 @@ public class AudioManager
 
         //something about a pause menu... am i gonna implement one before i lose motivation? who fucking knows.
         studioSystem.getBus("bus:/", out masterBus);
-        studioSystem.getBus("bus:/Music", out musicBus);
+        studioSystem.getBus("bus:/BGM", out musicBus);
         studioSystem.getBus("bus:/SFX", out sfxBus);
     }
 

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Raylib_cs;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
-using System.IO;
 
 public class ConfigSettings
 {
@@ -17,6 +18,18 @@ public class ConfigSettings
     public int FpsCount = 60;
     public int WindowWidth = 1080;
     public int WindowHeight = 720;
+
+    //keybinds
+    public KeyboardKey Left = KeyboardKey.A;
+    public KeyboardKey Right = KeyboardKey.D;
+    public KeyboardKey Up = KeyboardKey.W;
+    public KeyboardKey Down = KeyboardKey.S;
+    public KeyboardKey Jump = KeyboardKey.Space;
+    public KeyboardKey Confirm = KeyboardKey.Space;
+    public KeyboardKey Dash = KeyboardKey.LeftShift;
+    public KeyboardKey Deny = KeyboardKey.LeftShift;
+    public KeyboardKey Run = KeyboardKey.Null;
+    public KeyboardKey Hurt = KeyboardKey.Q;
 
     public ConfigSettings() { } //evil default constructor
 
@@ -42,7 +55,12 @@ public class ConfigSettings
                 LimitFPS = conf.LimitFPS,
                 FpsCount = conf.FpsCount,
                 WindowWidth = conf.WindowWidth,
-                WindowHeight = conf.WindowHeight
+                WindowHeight = conf.WindowHeight,
+                Left = conf.Left, Right = conf.Right,
+                Up = conf.Up, Down = conf.Down,
+                Dash = conf.Dash, Confirm = conf.Confirm,
+                Hurt = conf.Hurt, Jump = conf.Jump,
+                Deny = conf.Deny, Run = conf.Run
             };
         }
         catch(Exception ex)
@@ -90,4 +108,17 @@ public class ConfigMeta
     public int FpsCount = 60;
     public int WindowWidth = 1080;
     public int WindowHeight = 720;
+
+    //keybinds
+    public KeyboardKey Left = KeyboardKey.A;
+    public KeyboardKey Right = KeyboardKey.D;
+    public KeyboardKey Up = KeyboardKey.W;
+    public KeyboardKey Down = KeyboardKey.S;
+    public KeyboardKey Jump = KeyboardKey.Space;
+    public KeyboardKey Confirm = KeyboardKey.Space;
+    public KeyboardKey Dash = KeyboardKey.LeftShift;
+    public KeyboardKey Deny = KeyboardKey.LeftShift;
+    public KeyboardKey Run = KeyboardKey.Null;
+    public KeyboardKey Hurt = KeyboardKey.Q;
+
 }

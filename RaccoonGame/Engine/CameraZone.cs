@@ -9,6 +9,7 @@ public class CameraZone : GameObject
     //flags set by LoadFromJson
     public bool HasOffset;
     public Vector2 Offset;
+    Vector2 targetOffset;
 
     public bool OneWayX;
     public int OneWayXDir = 1;
@@ -17,6 +18,7 @@ public class CameraZone : GameObject
 
     public bool BorderX;
     public bool BorderY;
+    bool isActive;
 
     //runtime
     float? ratchetX, ratchetY;
@@ -29,7 +31,18 @@ public class CameraZone : GameObject
 
     public override void Update(float deltaTime)
     {
-        //not needed
+        if (!isActive)
+        {
+            return;
+        }
+
+        Program.camera.PersistantOffset = Vector2.Round(
+            new Vector2
+            (
+                MoveToward(Program.camera.PersistantOffset.X, targetOffset.X, 2.5f * deltaTime * 60f),
+                MoveToward(Program.camera.PersistantOffset.Y, targetOffset.Y, 2.5f * deltaTime * 60f)
+            )
+        );
     }
 
     public override void LoadFromJson(JsonElement json)
@@ -52,8 +65,22 @@ public class CameraZone : GameObject
         if (TryGetPropertyCI(json, "borderY", out var byp)) { BorderY = true; BorderY = byp.GetBoolean(); }
     }
 
-    public void OnEnter(GameCamera camera) { ratchetX = ratchetY = null; if (HasOffset) camera.PersistantOffset = Offset; }
-    public void OnExit() { ratchetX = ratchetY = null; }
+    public void OnEnter(GameCamera camera) 
+    { 
+        ratchetX = ratchetY = null;
+        isActive = true;
+        if (HasOffset) targetOffset = Offset;
+    }
+
+    static float MoveToward(float current, float target, float maxDelta)
+    {
+        if (MathF.Abs(target - current) <= maxDelta)
+        {
+            return target;
+        }
+        return current + MathF.Sign(target - current) * maxDelta;
+    }
+    public void OnExit() { isActive = false;  ratchetX = ratchetY = null; }
 
     public void Apply(GameCamera camera, GameObject target, ref Vector2 desired)
     {
