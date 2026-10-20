@@ -17,6 +17,7 @@ public class Player : GameObject
     //general movement values
     public const int JumpForce = 3;
     public const int Jumps = 2;
+    public const int JumpCutoff = 2;
     public int CurrentJumps = 2;
     public float Gravity = 18;
     public float FallGravity = 22;

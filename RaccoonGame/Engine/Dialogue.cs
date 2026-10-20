@@ -97,7 +97,7 @@ public static class DialogueManager
         Active = new DialogueBox
         {
             X = x,
-            Y = 8,
+            Y = 24,
             W = w,
             H = height,
             Lines = new[] { text },

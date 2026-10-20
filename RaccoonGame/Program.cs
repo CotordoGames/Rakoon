@@ -20,6 +20,8 @@ class Program
     public static bool DebugOverlay = false;
     public static bool DebugText = false;
     public static bool DebugCameraZones = false;
+    public static bool DrawLayerOne = true;
+    public static bool DrawLayerTwo = true;
 
     static Tileset tileset = null!;
     static List<Texture2D> bgTextures = new List<Texture2D>();
@@ -83,13 +85,19 @@ class Program
             if (Raylib.IsKeyPressed(KeyboardKey.F1)) Debug = !Debug;
 
             //draw overlay?
-            if(Debug && Raylib.IsKeyPressed(KeyboardKey.F2)) DebugOverlay = !DebugOverlay;
+            if( Raylib.IsKeyPressed(KeyboardKey.F2)) DebugOverlay = !DebugOverlay;
 
             //draw text?
-            if (Debug && Raylib.IsKeyPressed(KeyboardKey.F3)) DebugText = !DebugText;
+            if (Raylib.IsKeyPressed(KeyboardKey.F3)) DebugText = !DebugText;
 
             //draw zones?
-            if (Debug && Raylib.IsKeyPressed(KeyboardKey.F4)) DebugCameraZones = !DebugCameraZones;
+            if (Raylib.IsKeyPressed(KeyboardKey.F4)) DebugCameraZones = !DebugCameraZones;
+
+            //draw layer 1?
+            if (Raylib.IsKeyPressed(KeyboardKey.F5)) DrawLayerOne = !DrawLayerOne;
+
+            //draw layer 2?
+            if (Raylib.IsKeyPressed(KeyboardKey.F6)) DrawLayerTwo = !DrawLayerTwo;
 
             //very first thing, check if the window is resized for rendering reasons
             if (Raylib.IsWindowResized()) screen.UpdateDimensions();
@@ -149,14 +157,20 @@ class Program
 
         Raylib.BeginMode2D(camera.RaylibCamera);
 
-        //draw layer 1, the decor ish layer
-        LevelRenderer.DrawLayer(level, level.Layer1, tileset, currentCameraView);
+        if (DrawLayerOne)
+        {
+            //draw layer 1, the decor ish layer
+            LevelRenderer.DrawLayer(level, level.Layer1, tileset, currentCameraView);
+        }
 
         //draw all of the objects
         ObjectManager.DrawWorld(currentCameraView);
 
-        //draw layer 2
-        LevelRenderer.DrawLayer(level, level.Layer2, tileset, currentCameraView);
+        if(DrawLayerTwo)
+        {
+            //draw layer 2
+            LevelRenderer.DrawLayer(level, level.Layer2, tileset, currentCameraView);
+        }
 
         //draw collisions if we must
         //if (Debug)

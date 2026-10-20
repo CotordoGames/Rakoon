@@ -137,7 +137,7 @@
     "y": 400,
     "width": 480,
     "height": 208,
-    "offsetX": -48,
+    "offsetX": -32,
     "offsetY": 0,
     "borderX": false,
     "borderY": false
@@ -294,7 +294,7 @@
     "name": "solid_rect",
     "x": 32,
     "y": 0,
-    "width": 2528,
+    "width": 1816,
     "height": 32
   },
   {
@@ -932,5 +932,19 @@
     ],
     "openingAnimation": true,
     "sprite": "cubon.png"
+  },
+  {
+    "name": "solid_rect",
+    "x": 2272,
+    "y": 0,
+    "width": 288,
+    "height": 32
+  },
+  {
+    "name": "solid_rect",
+    "x": 1848,
+    "y": 0,
+    "width": 424,
+    "height": 16
   }
 ]

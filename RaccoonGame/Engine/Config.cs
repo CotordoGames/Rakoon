@@ -20,16 +20,16 @@ public class ConfigSettings
     public int WindowHeight = 720;
 
     //keybinds
-    public KeyboardKey Left = KeyboardKey.A;
-    public KeyboardKey Right = KeyboardKey.D;
-    public KeyboardKey Up = KeyboardKey.W;
-    public KeyboardKey Down = KeyboardKey.S;
-    public KeyboardKey Jump = KeyboardKey.Space;
-    public KeyboardKey Confirm = KeyboardKey.Space;
-    public KeyboardKey Dash = KeyboardKey.LeftShift;
-    public KeyboardKey Deny = KeyboardKey.LeftShift;
-    public KeyboardKey Run = KeyboardKey.Null;
-    public KeyboardKey Hurt = KeyboardKey.Q;
+    public KeyboardKey Left = KeyboardKey.Left;
+    public KeyboardKey Right = KeyboardKey.Right;
+    public KeyboardKey Up = KeyboardKey.Up;
+    public KeyboardKey Down = KeyboardKey.Down;
+    public KeyboardKey Jump = KeyboardKey.Z;
+    public KeyboardKey Confirm = KeyboardKey.Z;
+    public KeyboardKey Dash = KeyboardKey.X;
+    public KeyboardKey Deny = KeyboardKey.X;
+    public KeyboardKey Run = KeyboardKey.LeftShift;
+    public KeyboardKey Hurt = KeyboardKey.Space;
 
     public ConfigSettings() { } //evil default constructor
 
@@ -110,15 +110,15 @@ public class ConfigMeta
     public int WindowHeight = 720;
 
     //keybinds
-    public KeyboardKey Left = KeyboardKey.A;
-    public KeyboardKey Right = KeyboardKey.D;
-    public KeyboardKey Up = KeyboardKey.W;
-    public KeyboardKey Down = KeyboardKey.S;
-    public KeyboardKey Jump = KeyboardKey.Space;
-    public KeyboardKey Confirm = KeyboardKey.Space;
-    public KeyboardKey Dash = KeyboardKey.LeftShift;
-    public KeyboardKey Deny = KeyboardKey.LeftShift;
-    public KeyboardKey Run = KeyboardKey.Null;
-    public KeyboardKey Hurt = KeyboardKey.Q;
+    public KeyboardKey Left = KeyboardKey.Left;
+    public KeyboardKey Right = KeyboardKey.Right;
+    public KeyboardKey Up = KeyboardKey.Up;
+    public KeyboardKey Down = KeyboardKey.Down;
+    public KeyboardKey Jump = KeyboardKey.Z;
+    public KeyboardKey Confirm = KeyboardKey.Z;
+    public KeyboardKey Dash = KeyboardKey.X;
+    public KeyboardKey Deny = KeyboardKey.X;
+    public KeyboardKey Run = KeyboardKey.LeftShift;
+    public KeyboardKey Hurt = KeyboardKey.Space;
 
 }

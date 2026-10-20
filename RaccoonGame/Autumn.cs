@@ -12,7 +12,7 @@ public class Autumn : GameObject
     public const float WalkAcceleration = 6f;
     public const float RunAcceleration = 8f;
     public const float GroundDrag = 2f;
-    public const float GroundFriction = 10f;
+    public const float GroundFriction = 14f;
     public float LastAirVelocity = 0f;
 
     //air movement values-- no speed needed now
@@ -22,6 +22,7 @@ public class Autumn : GameObject
     //general movement values
     public const float JumpForce = 5.0f;
     public const float AirJumpForce = 4.36f;
+    public const float JumpCutoff = 3.8f;
     public const int Jumps = 1;
     public int CurrentJumps = 2;
     public float Gravity = 18;
@@ -74,7 +75,7 @@ public class Autumn : GameObject
     //tracks the players state
     public enum PlayerState
     {
-        idle, jump, fall, walk, run, dash, wallSlide, climb
+        idle, jump, fall, walk, dash, wallSlide, climb
     }
     public override void Start()
     {
@@ -127,7 +128,6 @@ public class Autumn : GameObject
         var anim = (AnimatedSprite2D)Graphic;
         anim.AddAnimation("idle", new[] { 0 }, 1f);
         anim.AddAnimation("walk", new[] { 0, 5 }, 0.08f);
-        anim.AddAnimation("run", new[] { 0, 5 }, 0.04f);
         anim.AddAnimation("jump", new[] { 1, 2, 3, 4, 5 }, 0.08f, loop: false);
         anim.AddAnimation("dash", new[] { 6, 7, 8 }, 0.1f, loop: false);
         anim.AddAnimation("fall", new[] { 9 }, 0.08f, loop: true);
@@ -137,27 +137,7 @@ public class Autumn : GameObject
 
         state = PlayerState.idle;
 
-        DialogueManager.TriggerDialogue(
-            [
-            "heya, dev here.",
-
-            "this build is simply meant to get feedback on the movement, to dont judge it too much...",
-
-            "you may press F11 for fullscreen, F1 for debug mode, and keys F2-F4 while in debug to toggle certain features... ciao!"
-
-            ],
-
-            [0.036f, 0.036f, 0.036f],
-
-            [-1, -1, -1],
-
-            true,
-
-            48,
-
-            2
-
-            );
+        DialogueManager.TriggerNotice("notice: this build is a test, dont judge it.", height: 16, true);
 
     }
 
@@ -187,7 +167,7 @@ public class Autumn : GameObject
         //cut velocity for when the player releases the jump key
         if(Raylib.IsKeyReleased(EngineInit.Config.Jump) && Velocity.Y < 0f)
         {
-            Velocity.Y *= 0.5f;
+            Velocity.Y /= JumpCutoff;
         }
 
         if(!WasGrounded && !IsGrounded)
@@ -253,11 +233,6 @@ public class Autumn : GameObject
                 GroundMove(directionX, WalkAcceleration, dt);
                 break;
 
-            case PlayerState.run:
-                if (IsGrounded) CurrentJumps = Jumps;
-                GroundMove(directionX, RunAcceleration, dt);
-                break;
-
             case PlayerState.jump:
                 AirMove(directionX, dt);
                 ApplyGravity(dt);
@@ -291,7 +266,7 @@ public class Autumn : GameObject
                 break;
         }
 
-        if(IsGrounded && state is not (PlayerState.walk or PlayerState.run))
+        if(IsGrounded && state is not (PlayerState.walk))
         {
             CurrentJumps = Jumps;
         }
@@ -317,7 +292,7 @@ public class Autumn : GameObject
         if (IsGrounded)
         {
             wallSliding = false;
-            state = Direction == 0 ? PlayerState.idle : Raylib.IsKeyDown(EngineInit.Config.Run) ? PlayerState.run : PlayerState.walk;
+            state = Direction == 0 ? PlayerState.idle : PlayerState.walk;
             return;
         }
 
@@ -414,7 +389,6 @@ public class Autumn : GameObject
         {
             PlayerState.idle => "idle",
             PlayerState.walk => "walk",
-            PlayerState.run => "run",
             PlayerState.jump => "jump",
             PlayerState.dash => "dash",
             PlayerState.wallSlide => "slide",
