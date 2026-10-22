@@ -26,6 +26,10 @@ public static class ObjectRegistry
         ["ladder"] = () => new Ladder(),
 
         ["spring"] = () => new Spring(),
+
+        ["Mouser"] = () => new Mouser(),
+
+        ["EnemyTrigger"] = () => new EnemyTrigger()
     };
 
     public static GameObject? Create(string name) =>

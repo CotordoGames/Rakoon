@@ -12,7 +12,7 @@ public class Autumn : GameObject
     public const float WalkAcceleration = 6f;
     public const float RunAcceleration = 8f;
     public const float GroundDrag = 2f;
-    public const float GroundFriction = 14f;
+    public const float GroundFriction = 12f;
     public float LastAirVelocity = 0f;
 
     //air movement values-- no speed needed now
@@ -22,7 +22,7 @@ public class Autumn : GameObject
     //general movement values
     public const float JumpForce = 5.0f;
     public const float AirJumpForce = 4.36f;
-    public const float JumpCutoff = 3.8f;
+    public const float JumpCutoff = 4.0f;
     public const int Jumps = 1;
     public int CurrentJumps = 2;
     public float Gravity = 18;
@@ -49,12 +49,14 @@ public class Autumn : GameObject
     const float CoyoteTime = 0.1f;
     const float JumpBufferTime = 0.1f;
     const float ApexThresHold = 1.5f;
-    const float ApexGravityMult = 0.5f;
+    const float ApexGravityMult = 0.4f;
+    const float HurtCooldown = 1.0f;
 
     //timers
     float coyoteTimer = 0f;
     float jumpBufferTimer = 0f;
     float squashTimer = 0f;
+    public float hurtCooldownTimer = 0f;
 
     //health
     public static HealthSystem? health;
@@ -80,6 +82,7 @@ public class Autumn : GameObject
     public override void Start()
     {
 
+        Layer = Layers.Player;
         //set the player to solid; make sure the texture is loaded
         IsSolid = true;
 
@@ -158,9 +161,19 @@ public class Autumn : GameObject
 
         //update the wall jump lock timer
         if (wallJumpLockTimer > 0f) wallJumpLockTimer -= dt;
+        if (hurtCooldownTimer > 0f) hurtCooldownTimer = MathF.Max(0f, hurtCooldownTimer - dt);
 
-        //update coyote time and jump buffer
-        coyoteTimer = IsGrounded ? CoyoteTime : coyoteTimer - dt;
+        if(hurtCooldownTimer > 0f)
+        {
+            TintColor = new Color(0xFF, 0xF0, 0xF0, 0xB0);
+        }
+        else
+        {
+            TintColor = Color.White;
+        }
+
+            //update coyote time and jump buffer
+            coyoteTimer = IsGrounded ? CoyoteTime : coyoteTimer - dt;
         jumpBufferTimer = Raylib.IsKeyPressed(EngineInit.Config.Jump) ? JumpBufferTime : jumpBufferTimer - dt;
 
 
@@ -192,6 +205,22 @@ public class Autumn : GameObject
         UpdateDash(dt);
 
         bool onLadder = false;
+
+        if (Raylib.IsKeyPressed(EngineInit.Config.Hurt))
+        {
+            health?.TakeDamage(4);
+        }
+
+        var LadderInstance = CurrentlyColliding.OfType<Ladder>().FirstOrDefault();
+
+        if (CurrentlyColliding.OfType<Ladder>().Any() && Raylib.IsKeyDown(EngineInit.Config.Up))
+        {
+            onLadder = true;
+        }
+
+        //update the current state to change how the players values get update this frame
+        DetermineState(directionX, onLadder);
+
         foreach (var obj in CurrentlyColliding)
         {
             if (obj is Spring && state != PlayerState.dash)
@@ -207,20 +236,20 @@ public class Autumn : GameObject
                     Velocity.Y = -spring.BounceHeight;
                 }
             }
-            if (obj is Ladder && Raylib.IsKeyDown(EngineInit.Config.Up))
+            if (obj is Enemy e)
             {
-                onLadder = true;
-                break;
+                if (state == PlayerState.dash)
+                {
+                    if(e.DamageCoolDownTimer <= 0) e.health.TakeDamage(5);
+                }
+                else if(hurtCooldownTimer <= 0)
+                {
+                    health?.TakeDamage(4);
+                    Velocity = new Vector2(e.direction * e.knockback, -4);
+                    hurtCooldownTimer = HurtCooldown;
+                }
             }
         }
-
-        if (Raylib.IsKeyPressed(EngineInit.Config.Hurt))
-        {
-            health?.TakeDamage(4);
-        }
-
-        //update the current state to change how the players values get update this frame
-        DetermineState(directionX, onLadder);
 
         switch (state)
         {

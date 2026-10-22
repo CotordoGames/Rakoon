@@ -9,6 +9,8 @@ public static class BackgroundRenderer
     //draw the bgs
     public static void Draw(Level level, List<Texture2D> textures, Rectangle cameraView, int screenW, int screenH)
     {
+        if (!Program.DrawBackground) return;
+
         //loop through all the textures
         for (int i = 0; i < textures.Count; i++)
         {

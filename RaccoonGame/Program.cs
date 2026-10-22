@@ -22,6 +22,10 @@ class Program
     public static bool DebugCameraZones = false;
     public static bool DrawLayerOne = true;
     public static bool DrawLayerTwo = true;
+    public static bool DrawObjects = true;
+    public static bool DrawBackground = true;
+    public static long gcBefore;
+    public static System.Diagnostics.Stopwatch sw;
 
     static Tileset tileset = null!;
     static List<Texture2D> bgTextures = new List<Texture2D>();
@@ -63,7 +67,7 @@ class Program
 
         if (args.Length == 0)
         {
-            LoadRoom("assets/levels/MoveGym", spawnAtDoorId: null);
+            LoadRoom("assets/levels/TestLDTK3", spawnAtDoorId: null);
         }
         else
         {
@@ -99,13 +103,37 @@ class Program
             //draw layer 2?
             if (Raylib.IsKeyPressed(KeyboardKey.F6)) DrawLayerTwo = !DrawLayerTwo;
 
+            //draw objects?
+            if (Raylib.IsKeyPressed(KeyboardKey.F7)) DrawObjects = !DrawObjects;
+
+            //draw objects?
+            if (Raylib.IsKeyPressed(KeyboardKey.F8)) DrawBackground = !DrawBackground;
+
+            if (Raylib.IsKeyPressed(KeyboardKey.P))
+            {
+                for(int i = 0; i < 2000;  i++)
+                {
+                    ObjectManager.AddObject(new StaticSolid());
+                }
+            }
+
             //very first thing, check if the window is resized for rendering reasons
             if (Raylib.IsWindowResized()) screen.UpdateDimensions();
 
             EngineInit.Update();
 
+            //object block
+
+            //measure performance
+            gcBefore = GC.CollectionCount(0);
+            sw = System.Diagnostics.Stopwatch.StartNew();
+
             //update all object's logic
             ObjectManager.UpdateWorld(dt);
+
+            sw.Stop();
+
+            //end
 
             //update the dialogue manager
             DialogueManager.Update(dt);
@@ -151,26 +179,20 @@ class Program
 
         Raylib.BeginTextureMode(screen.Target);
 
-        Raylib.ClearBackground(new Color(0x23, 0x53, 0x47, 0xFF));
+        Raylib.ClearBackground(new Color(0x00, 0x00, 0x00, 0xFF));
 
         BackgroundRenderer.Draw(level, bgTextures, currentCameraView, ScreenWidth, ScreenHeight);
 
         Raylib.BeginMode2D(camera.RaylibCamera);
 
-        if (DrawLayerOne)
-        {
-            //draw layer 1, the decor ish layer
-            LevelRenderer.DrawLayer(level, level.Layer1, tileset, currentCameraView);
-        }
+        //draw layer 1, the decor ish layer
+        LevelRenderer.DrawLayer(level, level.Layer1, tileset, currentCameraView);
 
         //draw all of the objects
         ObjectManager.DrawWorld(currentCameraView);
 
-        if(DrawLayerTwo)
-        {
-            //draw layer 2
-            LevelRenderer.DrawLayer(level, level.Layer2, tileset, currentCameraView);
-        }
+        //draw layer 2
+        LevelRenderer.DrawLayer(level, level.Layer2, tileset, currentCameraView);
 
         //draw collisions if we must
         //if (Debug)
@@ -230,7 +252,7 @@ class Program
             Raylib.DrawRectangle((int)screen.DestRect.X, (int)screen.DestRect.Y, (int)screen.DestRect.Width / 6, (int)screen.DestRect.Height, new Color(0, 0, 0, 140));
             Raylib.DrawTextEx(ObjectManager.DebugFont, Raylib.GetFPS().ToString(), new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
             Raylib.DrawTextEx(ObjectManager.DebugFont, $"Player Velocity:\nX: {player.Velocity.X}\nY: {player.Velocity.Y}", new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y + Raylib.GetScreenHeight() / 45), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
-            Raylib.DrawTextEx(ObjectManager.DebugFont, $"Object Count: \n{ObjectManager.AllObjects.Count}\n{player.DashTimer}", new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y + (Raylib.GetScreenHeight() / 45) * 4), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
+            Raylib.DrawTextEx(ObjectManager.DebugFont, $"Object Count: \n{ObjectManager.AllObjects.Count}\n{player.DashTimer}\nHurt Cooldown: {player.hurtCooldownTimer}\nObject Time:\n{sw.Elapsed.TotalMilliseconds}\nGC collection count:\n{GC.CollectionCount(0) - gcBefore}", new Vector2((int)screen.DestRect.X, (int)screen.DestRect.Y + (Raylib.GetScreenHeight() / 45) * 4), Raylib.GetScreenHeight() / 45, 0, new Color(0, 255, 0, 255));
 
         }
 

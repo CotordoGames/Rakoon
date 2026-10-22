@@ -4,7 +4,7 @@
   "version": 1,
   "width": 320,
   "height": 76,
-  "bgm": "rakoon_exercise",
+  "bgm": "rakoon",
   "bgImages": [
     "bg_block.png",
     "bg_block_2.png"

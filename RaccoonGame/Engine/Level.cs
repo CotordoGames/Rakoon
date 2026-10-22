@@ -173,6 +173,8 @@ public static class LevelRenderer
     //draw a single layer
     public static void DrawLayer(Level level, List<byte> layer, Tileset tileset, Rectangle cameraView)
     {
+        if ((layer == Program.level.Layer1 && !Program.DrawLayerOne) || (layer == Program.level.Layer2 && !Program.DrawLayerTwo)) return;
+
         //start of the list of visible tiles
         int startX = Math.Max(0, (int)(cameraView.X / tileset.TileSize));
         int startY = Math.Max(0, (int)(cameraView.Y / tileset.TileSize));

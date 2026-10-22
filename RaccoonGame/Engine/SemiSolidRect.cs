@@ -11,6 +11,7 @@ public class SemiSolidRect : GameObject
     {
         IsSolid = false; //this isnt normal collision
         DebugColor = Color.Magenta;
+        TracksCollisions = false;
     }
 
     public override void Update(float deltaTime)

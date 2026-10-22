@@ -97,3 +97,8 @@ public class EngineDebug
         }
     }
 }
+
+static class Layers
+{
+    public const uint Default = 1, Player = 2, Enemy = 4;
+}

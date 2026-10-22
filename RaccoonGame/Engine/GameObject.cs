@@ -16,9 +16,13 @@ public abstract class GameObject
     public bool IsGrounded = false;
     public bool IsTouchingWallLeft = false;
     public bool IsTouchingWallRight = false;
+    public bool TracksCollisions = true;
     public List<GameObject> CurrentlyColliding = new List<GameObject>();
     public List<Component> Components = new List<Component>();
     public int DrawOrder = 0;
+
+    public uint Layer = 1;
+    public uint BlockedBy = ~0u;
 
     //default set to size but can be changed
     Vector2? colliderSizeOverride = null;
@@ -36,6 +40,7 @@ public abstract class GameObject
     //graphics
     public Drawable? Graphic { get; set; } = null;
     public Color DebugColor { get; set; } = Color.Blue;
+    public Color TintColor { get; set; } = Color.White;
 
     //the collider
     public Rectangle BoundingBox => new Rectangle(

@@ -4,6 +4,7 @@ using System.Text;
 using System.Numerics;
 using Raylib_cs;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 
 public static class ObjectManager
 {
@@ -12,6 +13,16 @@ public static class ObjectManager
     public static List<GameObject> Solids = new List<GameObject>();
     public static List<GameObject> SemiSolids = new List<GameObject>();
     public static List<CameraZone> CameraZones = new List<CameraZone>();
+
+    //persistant list of everything that can be drawn kept in order by DrawOrder
+    //this survives frames
+    static readonly List<GameObject> drawList = new List<GameObject>();
+
+    //set this to true whenever we need to remove an object
+    static bool drawListNeedsPurge = false;
+
+    //array of objects that are currently on screen
+    static readonly List<GameObject> debugVisible = new List<GameObject>(256);
 
     public static Font DebugFont = LoadDebugFont();
     
@@ -27,6 +38,7 @@ public static class ObjectManager
     public static void AddObject(GameObject obj)
     {
         AllObjects.Add(obj);
+        drawList.Add(obj);
         obj.Start();
         if (obj.IsSolid) Solids.Add(obj);
         if (obj is CameraZone cz) CameraZones.Add(cz);
@@ -38,12 +50,171 @@ public static class ObjectManager
         }
     }
 
+    //hendles clearing out unused objects each frame
+    static void EnsureDrawListReady()
+    {
+        //if something was removed, remove the now dead objects
+        if (drawListNeedsPurge)
+        {
+            int w = 0; //write index-- where the next surviving object goes
+
+            //r is the read index, it goes through each list entry
+            for (int r = 0; r < drawList.Count; r++)
+            {
+                //object is active? move it  to the write position where not dead objects go
+                if (drawList[r].Active) drawList[w++] = drawList[r];
+
+                //dead objects are skipped and r moves one, but w doesnt
+            }
+
+            //remove leftover dupes
+            drawList.RemoveRange(w, drawList.Count - w);
+            drawListNeedsPurge = false; //reset
+        }
+
+        //insertion sort by draw order
+        //if the list is already sorted, the while loop never runs, thus saving time
+        for(int i = 1; i < drawList.Count; i++)
+        {
+            var item = drawList[i]; //object we are placing
+            int j = i - 1; //compare against the one just before by draw order
+            while(j >= 0 && drawList[j].DrawOrder > item.DrawOrder)
+            {
+                drawList[j + 1] = drawList[j];
+                j--;
+            }
+            drawList[j + 1] = item;
+        }
+    }
+
     //deletes all objects, great for switching a scene
     public static void ClearWorld()
     {
         AllObjects.Clear();
         Solids.Clear();
         CameraZones.Clear();
+        SemiSolids.Clear();
+        drawList.Clear();
+    }
+
+    static void Step(GameObject entity, float MoveX, float MoveY)
+    {
+        //x axis first-- resolved separately for wall sliding
+        entity.Position.X += MoveX;
+        Rectangle boxX = entity.BoundingBox; //snapshot of where we are after moving
+
+        foreach(var solid  in Solids)
+        {
+            if(!IsBlocking(entity, solid)) continue;
+
+            Rectangle sb = solid.BoundingBox;
+
+            if(Raylib.CheckCollisionRecs(boxX, sb))
+            {
+                if(MoveX > 0)
+                    entity.Position.X = sb.X - entity.ColliderSize.X - entity.ColliderOffset.X;
+                else if (MoveX < 0)
+                    entity.Position.X = sb.X + sb.Width - entity.ColliderOffset.X;
+
+                entity.Velocity.X = 0;
+                boxX = entity.BoundingBox; //refresh the snapshot
+            }
+        }
+
+        // y axis
+        entity.Position.Y += MoveY;
+        Rectangle boxY = entity.BoundingBox; //snapshot of where we are after moving
+
+        foreach (var solid in Solids)
+        {
+            if (!IsBlocking(entity, solid)) continue;
+
+            Rectangle sb = solid.BoundingBox;
+
+            if (Raylib.CheckCollisionRecs(boxY, sb))
+            {
+                if (MoveY > 0)
+                    entity.Position.Y = sb.Y - entity.ColliderSize.Y - entity.ColliderOffset.Y;
+                else if (MoveY < 0)
+                    entity.Position.Y = sb.Y + sb.Height - entity.ColliderOffset.Y;
+
+                entity.Velocity.Y = 0;
+                boxY = entity.BoundingBox; //refresh the snapshot
+            }
+        }
+
+        //semisolids
+        if(MoveY > 0)
+        {
+            foreach(var semi in SemiSolids)
+            {
+                if(!semi.Active) continue;
+
+                Rectangle sb = semi.BoundingBox;
+
+                float prevBottom = boxY.Y + boxY.Height - MoveY;
+
+                if (prevBottom > sb.Y) continue;
+
+                if (Raylib.CheckCollisionRecs(boxY, sb))
+                {
+                    entity.Position.Y = sb.Y - entity.ColliderSize.Y - entity.ColliderOffset.Y;
+                    entity.Velocity.Y = 0;
+                    boxY = entity.BoundingBox; //refresh the snapshot
+                    
+                }
+            }
+        }
+    }
+
+    static void UpdateProbes(GameObject entity)
+    {
+        Rectangle b = entity.BoundingBox; //reuse for all 3 probes
+
+        Rectangle groundProbe = new Rectangle(b.X, b.Y + b.Height, b.Width, 1);
+        Rectangle wallProbeLeft = new Rectangle(b.X - 1, b.Y, 1, b.Height);
+        Rectangle wallProbeRight = new Rectangle(b.X + b.Width, b.Y, 1, b.Height);
+
+        //local bools rather than refs because simpler
+        bool grounded = false, wallLeft = false, wallRight = false;
+
+        foreach(var solid in Solids)
+        {
+            //you cant be grounded on someting that isnt solid, ect
+            if (!IsBlocking(entity, solid)) continue;
+
+            Rectangle sb = solid.BoundingBox;
+
+            //after a probe finds something, no need to check any more for that condition
+            if (!grounded && Raylib.CheckCollisionRecs(groundProbe, sb)) grounded = true;
+            if (!wallLeft && Raylib.CheckCollisionRecs(wallProbeLeft, sb)) wallLeft = true;
+            if (!wallRight && Raylib.CheckCollisionRecs(wallProbeRight, sb)) wallRight = true;
+
+
+            //nothing left to find
+            if (grounded && wallLeft && wallRight) break;
+        }
+
+        //semisolids
+        if(!grounded && entity.Velocity.Y == 0)
+        {
+            foreach(var semi in SemiSolids)
+            {
+                if(!semi.Active) continue;
+
+                if(Raylib.CheckCollisionRecs(groundProbe, semi.BoundingBox) && groundProbe.Y + groundProbe.Height > semi.BoundingBox.Y)
+                {
+                    grounded = true;
+                    break; //one is all it takes
+                }
+            }
+        }
+
+
+        //pass results to entity
+        entity.IsGrounded = grounded;
+        entity.IsTouchingWallLeft = wallLeft;
+        entity.IsTouchingWallRight = wallRight;
     }
 
 
@@ -57,8 +228,10 @@ public static class ObjectManager
             //if its not active, dont do anything
             if (!obj.Active)
             {
+                drawListNeedsPurge = true;
                 if (obj.IsSolid) Solids.Remove(obj);
                 if (obj is CameraZone cz2) CameraZones.Remove(cz2);
+                if (obj is SemiSolidRect) SemiSolids.Remove(obj);
                 AllObjects.RemoveAt(i);
                 continue;
             }
@@ -69,197 +242,84 @@ public static class ObjectManager
 
             if (obj.CanMove)
             {
-                bool grounded = false;
-                bool wallLeft = false;
-                bool wallRight = false;
+                //bool grounded = false;
+                //bool wallLeft = false;
+                //bool wallRight = false;
 
-                //dt shit
+                ////dt shit
+                //float stepX = obj.Velocity.X * deltaTime * 60.0f;
+                //float stepY = obj.Velocity.Y * deltaTime * 60.0f;
+
+                //int steps = Math.Max(1, (int)MathF.Ceiling(Math.Max(MathF.Abs(stepX), MathF.Abs(stepY)) / 4f));
+                //for(int s = 0; s < steps; s++)
+                //{
+                //    MoveAndCollide(obj, stepX / steps, stepY / steps, ref grounded, ref wallLeft, ref wallRight);
+                //}
+
+                ////MoveAndCollide(obj, obj.Velocity.X, obj.Velocity.Y, ref grounded, ref wallLeft, ref wallRight);
+                //obj.IsGrounded = grounded;
+                //obj.IsTouchingWallLeft = wallLeft;
+                //obj.IsTouchingWallRight = wallRight;
+
                 float stepX = obj.Velocity.X * deltaTime * 60.0f;
                 float stepY = obj.Velocity.Y * deltaTime * 60.0f;
 
                 int steps = Math.Max(1, (int)MathF.Ceiling(Math.Max(MathF.Abs(stepX), MathF.Abs(stepY)) / 4f));
+
                 for(int s = 0; s < steps; s++)
                 {
-                    MoveAndCollide(obj, stepX / steps, stepY / steps, ref grounded, ref wallLeft, ref wallRight);
+                    Step(obj, stepX / steps, stepY / steps);
                 }
 
-                //MoveAndCollide(obj, obj.Velocity.X, obj.Velocity.Y, ref grounded, ref wallLeft, ref wallRight);
-                obj.IsGrounded = grounded;
-                obj.IsTouchingWallLeft = wallLeft;
-                obj.IsTouchingWallRight = wallRight;
+                UpdateProbes(obj);
             } 
 
         }
 
         //additional pass in order for objects to "know" what all they are collidion with
 
-        foreach(var obj in AllObjects)
-        {
-            obj.CurrentlyColliding.Clear();
-        }
-
-        for(int i = 0; i < AllObjects.Count; i++)
-        {
-            var a = AllObjects[i];
-            if (!a.Active) continue;
-
-            for (int j = i + 1; j < AllObjects.Count; j++)
-            {
-                var b = AllObjects[j];
-                if(!b.Active) continue;
-
-                if(Raylib.CheckCollisionRecs(a.BoundingBox, b.BoundingBox)) 
-                {
-                    a.CurrentlyColliding.Add(b);
-                    b.CurrentlyColliding.Add(a);
-                }
-            }
-        }
-
-        //foreach (var a in AllObjects)
+        //foreach(var obj in AllObjects)
         //{
-        //    //clear the list of objects that are colliding
-        //    a.CurrentlyColliding.Clear();
+        //    obj.CurrentlyColliding.Clear();
+        //}
 
-        //    //dont do anything if the object isnt active
+        //for(int i = 0; i < AllObjects.Count; i++)
+        //{
+        //    var a = AllObjects[i];
         //    if (!a.Active) continue;
 
-        //    //check all of the objects to see if they collide
-        //    foreach (var b in AllObjects)
-        //    {
-        //        //if the object isnt active it isnt colliding
-        //        if (b == a || !b.Active) continue;
+        //for (int j = i + 1; j < AllObjects.Count; j++)
+        //{
+        //    var b = AllObjects[j];
+        //    if (!b.Active) continue;
 
-        //        //actual collision check
-        //        if (Raylib.CheckCollisionRecs(a.BoundingBox, b.BoundingBox))
-        //        {
-        //            a.CurrentlyColliding.Add(b);
-        //        }
+        //    if (Raylib.CheckCollisionRecs(a.BoundingBox, b.BoundingBox))
+        //    {
+        //        a.CurrentlyColliding.Add(b);
+        //        b.CurrentlyColliding.Add(a);
         //    }
         //}
-    }
+        //}
 
-    //moves all objects and checks for collisions
-    public static void MoveAndCollide(GameObject entity, float moveX, float moveY, ref bool isGrounded, ref bool isTouchingWallLeft, ref bool isTouchingWallRight)
-    {
-        //check the X axis first
-        entity.Position.X += moveX;
-        Rectangle boxX = entity.BoundingBox;
-
-        //loop through the list of solid active objects
-        foreach(var solid in Solids)
+        for (int i = 0; i < AllObjects.Count; i++)
         {
-            //pass if the object isnt active or is the entity itself
-            if (solid == entity || !solid.Active) continue;
+            var a = AllObjects[i];
 
-            //if the object collided
-            if(Raylib.CheckCollisionRecs(boxX, solid.BoundingBox))
+            a.CurrentlyColliding.Clear();
+
+            if (!a.Active || !a.TracksCollisions) continue;
+
+            Rectangle aBox = a.BoundingBox; //cache it
+
+            for (int j = 0; j < AllObjects.Count; j++)
             {
-                if (moveX > 0) 
-                    entity.Position.X = solid.BoundingBox.X - entity.ColliderSize.X - entity.ColliderOffset.X;
-                else if (moveX < 0)
-                    entity.Position.X = solid.BoundingBox.X + solid.BoundingBox.Width - entity.ColliderOffset.X;
+                var b = AllObjects[j];
+                if (!b.Active || b == a) continue;
 
-                entity.Velocity.X = 0;
-                boxX = entity.BoundingBox;
-            }
-        }
-
-        //y axis time babyyy
-        entity.Position.Y += moveY;
-        Rectangle boxY = entity.BoundingBox;
-
-        //loop once again
-        foreach(var solid in Solids)
-        {
-            //dont do anything if the object collides with itself or if it inst active
-            if(solid == entity || !solid.Active || !solid.Active) continue;
-
-            if(Raylib.CheckCollisionRecs(boxY, solid.BoundingBox))
-            {
-                if(moveY > 0)
+                if (Raylib.CheckCollisionRecs(aBox, b.BoundingBox))
                 {
-                    entity.Position.Y = solid.BoundingBox.Y - entity.ColliderSize.Y - entity.ColliderOffset.Y;
+                    a.CurrentlyColliding.Add(b);
                 }
-                else if(moveY < 0)
-                {
-                    entity.Position.Y = solid.BoundingBox.Y + solid.BoundingBox.Height - entity.ColliderOffset.Y;
-                }
-
-                entity.Velocity.Y = 0;
-                boxY = entity.BoundingBox;
-            }
-        }
-
-        //one way platforms
-        if(moveY > 0)
-        {
-            foreach(var semi in SemiSolids)
-            {
-                if (!semi.Active) continue;
-
-                float prevBottom = boxY.Y + boxY.Height - moveY;
-                if (prevBottom > semi.BoundingBox.Y) continue; // inside or below it
-
-                if(Raylib.CheckCollisionRecs(boxY, semi.BoundingBox))
-                {
-                    entity.Position.Y = semi.BoundingBox.Y - entity.ColliderSize.Y - entity.ColliderOffset.Y;
-                    entity.Velocity.Y = 0;
-                    boxY = entity.BoundingBox;
-                }
-            }
-        }
-
-        //to check if the object is grounded or touching a wall
-        Rectangle groundProbe = new Rectangle(
-            entity.BoundingBox.X,
-            entity.BoundingBox.Y + entity.BoundingBox.Height,
-            entity.BoundingBox.Width,
-            1);
-
-        Rectangle wallProbeLeft = new Rectangle(
-            entity.BoundingBox.X - 1,
-            entity.BoundingBox.Y,
-            1,
-            entity.BoundingBox.Height);
-
-        Rectangle wallProbeRight = new Rectangle(entity.BoundingBox.X + entity.BoundingBox.Width,
-            entity.BoundingBox.Y,
-            1,
-            entity.BoundingBox.Height);
-
-        foreach (var solid in Solids)
-        {
-            if (solid == entity || !solid.Active) continue;
-            if(Raylib.CheckCollisionRecs(groundProbe, solid.BoundingBox))
-            {
-                isGrounded = true;
-            }
-
-            if (Raylib.CheckCollisionRecs(wallProbeLeft, solid.BoundingBox))
-            {
-                isTouchingWallLeft = true;
-            }
-
-            if (Raylib.CheckCollisionRecs(wallProbeRight, solid.BoundingBox))
-            {
-                isTouchingWallRight = true;
-            }
-
-            if (isGrounded && isTouchingWallLeft && isTouchingWallRight)
-                break;
-
-
-        }
-
-        //handle semisolid collision
-        foreach (var semi in SemiSolids)
-        {
-            if(!semi.Active) continue;
-            if(Raylib.CheckCollisionRecs(groundProbe, semi.BoundingBox) && entity.Velocity.Y == 0 && groundProbe.Y + groundProbe.Height > semi.BoundingBox.Y)
-            {
-                isGrounded = true;
-                break;
             }
         }
     }
@@ -267,109 +327,99 @@ public static class ObjectManager
     //draw all of the objects
     public static void DrawWorld(Rectangle cameraView)
     {
-        var sorted = AllObjects.Where(o => o.Active).OrderBy(o => o.DrawOrder); //sort the objects by draw order
+        if (!Program.DrawObjects) return;
 
-        foreach(var obj in sorted)
+        //sort and comp[act first so the loop below has an accurate list
+        EnsureDrawListReady();
+
+        //just a plain for-loop
+        for(int i = 0; i < drawList.Count; i++)
         {
-            //if the object isnt active, dont draw it
-            if (!obj.Active) continue;
+            var obj = drawList[i];
+
+            //skip all inactive or non-drawable objects before we do any work because we are lazy fucks
+            if (!obj.Active || obj.Graphic == null) continue;
 
             //only render stuff the camera can see
             Rectangle drawBounds = new Rectangle(obj.Position.X, obj.Position.Y, obj.Size.X, obj.Size.Y);
-
             if (!Raylib.CheckCollisionRecs(drawBounds, cameraView)) continue;
-            //check if the object actually HAS an image to avoid crashes
-            if (obj.Graphic != null)
-            {
-                Vector2 drawSize = obj.Size * obj.VisualScale; // objects now can multiply the graphic's draw size
 
-                Vector2 drawPosition = obj.Position + new Vector2((obj.Size.X - drawSize.X)/2, obj.Size.Y - drawSize.Y); //adjust the position
+            Vector2 drawSize = obj.Size * obj.VisualScale; // objects now can multiply the graphic's draw size
+            Vector2 drawPosition = obj.Position + new Vector2((obj.Size.X - drawSize.X) / 2, obj.Size.Y - drawSize.Y); //adjust the position
 
-                obj.Graphic.Draw(Vector2.Round(drawPosition), Vector2.Round(drawSize), Color.White);
-            }
+            obj.Graphic.Draw(Vector2.Round(drawPosition), Vector2.Round(drawSize), obj.TintColor);
         }
     }
 
     public static void DrawDebugWorld(Rectangle cameraView, float LineThick)
     {
-        var sorted = AllObjects
-            .Where(o => o.Active)
-            .Where(o =>
-            {
-                Rectangle bounds = new Rectangle(o.Position.X, o.Position.Y, o.Size.X, o.Size.Y);
+        EnsureDrawListReady(); //compact + sort yadayda
 
-                return Raylib.CheckCollisionRecs(bounds, cameraView);
-
-            }) //filter out offscreen objects
-            .OrderBy(o => o.DrawOrder) //sort by draw order
-            .ToList();
-
-
-
-        foreach (var obj in sorted)
+        //cull once-- empty the buffer and collect only active objects that overlap the camera
+        debugVisible.Clear();
+        for(int i = 0; i < drawList.Count; i++)
         {
-            //if the object isnt active, dont draw it
-            if (!obj.Active) continue;
+            var o = drawList[i];
+            if (!o.Active) continue;
 
-            //check if its on screen
-            Rectangle drawBounds = new Rectangle(obj.Position.X, obj.Position.Y, obj.Size.X, obj.Size.Y);
-            if (!Raylib.CheckCollisionRecs(drawBounds, new Rectangle(cameraView.X, cameraView.Y, cameraView.Width, cameraView.Height))) continue;
+            Rectangle bounds = new Rectangle(o.Position.X, o.Position.Y, o.Size.X, o.Size.Y);
+            if (Raylib.CheckCollisionRecs(bounds, cameraView)) debugVisible.Add(o);
+        }
 
+        //since draw list was already sorted, this list is too by default.
+
+        //loop over the rectangles only once and keep them separate from the text so raylib can batch them
+        for (int i = 0; i < debugVisible.Count; i++)
+        {
+            var obj = debugVisible[i];
+
+            //collider rect in world space rounded to whole pixels
             Rectangle debugRect = new Rectangle(Vector2.Round(obj.Position) + Vector2.Round(obj.ColliderOffset), Vector2.Round(obj.ColliderSize));
 
-            if (obj is CameraZone cz)
+            if(obj is CameraZone)
             {
                 if (Program.DebugCameraZones)
                 {
-                    //draw(camerazone
                     Raylib.DrawRectangleRec(debugRect, new Color(0, 255, 0, 24));
                     Raylib.DrawRectangleLinesEx(debugRect, LineThick, new Color(0, 255, 0, 255));
                 }
-                
             }
             else
             {
-                //draw(non camerazone)
                 Raylib.DrawRectangleRec(debugRect, new Color((byte)obj.DebugColor.R, (byte)obj.DebugColor.G, (byte)obj.DebugColor.B, (byte)48));
                 Raylib.DrawRectangleLinesEx(debugRect, LineThick, obj.DebugColor);
             }
-
-            
         }
 
-        if (Program.DebugText)// text loop so regular rects can batch
+        //second loop-- only text labels
+        if (Program.DebugText)
         {
-            foreach (var textobj in sorted)
+            for (int i = 0; i < debugVisible.Count; i++)
             {
-                if (textobj is CameraZone textcz && !Program.DebugCameraZones)
-                    continue;
+                var textobj = debugVisible[i];
 
-                string label = textobj is CameraZone camz ? $"{textobj.GetType()}\nsize: {textobj.ColliderSize}borders: {camz.BorderX}, {camz.BorderY}\noffsets: {camz.Offset}"
-                    : $"{textobj.GetType()}\nsize: {textobj.ColliderSize}";
+                //hide camera zone labels unless camera zone debugging is on
+                if (textobj is CameraZone && !Program.DebugCameraZones) continue;
 
-                //Raylib.DrawTextPro( //shadow for readability
-                //        DebugFont,
-                //        label,
-                //        new Vector2(textobj.Position.X - 1, textobj.Position.Y + 1),
-                //        Vector2.Zero,
-                //        0f,
-                //        4,
-                //        0,
-                //        Color.Black
-                //    );
+                //camera zones get extra info, but everything else gets generalized becuase im hella racist
+                string label = textobj is CameraZone camz ? $"{textobj.GetType()}\n" +
+                    $"size: {textobj.ColliderSize}" +
+                    $"borders: {camz.BorderX}, {camz.BorderY}\n" +
+                    $"offsets: {camz.Offset}"
+                    : 
+                    $"{textobj.GetType()}\n" +
+                    $"size: {textobj.ColliderSize}";
 
-                Raylib.DrawTextPro(
-                        DebugFont,
-                        label,
-                        textobj.Position,
-                        Vector2.Zero,
-                        0f,
-                        4,
-                        0,
-                        Color.White
-                    );
-
+                Raylib.DrawTextPro(DebugFont, label, textobj.Position, Vector2.Zero, 0f, 4, 0, Color.White);
             }
         }
+    }
+
+    //helper
+    static bool IsBlocking(GameObject entity, GameObject solid)
+    {
+        return solid != entity
+            && solid.Active
+            && (entity.BlockedBy & solid.Layer) != 0;
     }
 }

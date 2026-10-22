@@ -12,6 +12,7 @@ public class StaticSolid : GameObject
         IsSolid = true;
         //no graphic needed
         DebugColor = Color.Red;
+        TracksCollisions = false;
     }
 
     public override void Update(float deltaTime)
