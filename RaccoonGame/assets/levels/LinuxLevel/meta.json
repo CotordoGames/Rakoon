@@ -1,0 +1,18 @@
+{
+  "name": "Linux Level",
+  "author": "Dean",
+  "version": 0,
+  "width": 160,
+  "height": 24,
+  "bgm": "deathMarch",
+  "bgImages": [],
+  "bgSpeeds": [],
+  "bgOffsetsX": [],
+  "bgOffsetsY": [],
+  "tileset": "template",
+  "spawnPoint": {
+    "x": 0,
+    "y": 0
+  },
+  "hasSpawnPoint": true
+}

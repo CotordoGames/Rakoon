@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Numerics;
 using Raylib_cs;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+using Color = Raylib_cs.Color;
+using Rectangle = Raylib_cs.Rectangle;
 
 public static class ObjectManager
 {
@@ -26,6 +27,16 @@ public static class ObjectManager
 
     public static Font DebugFont = LoadDebugFont();
     
+    //values to do with the spacial grid system
+    const float CellSize = 64.0f;
+    
+    static readonly SpacialGrid staticGrid = new SpacialGrid(CellSize); //walls, floors, any object that doesnt move
+    static readonly SpacialGrid frameGrid = new SpacialGrid(CellSize); //everything, gets rebuilt each frame
+    
+    static readonly List<GameObject> DynamicSolids = new List<GameObject>();
+    static readonly List<GameObject> nearby = new List<GameObject>(64); // reused: solids near current entity
+    static readonly List<GameObject> queryBuffer = new List<GameObject>(64); // reaused: neighbours for currentlycolliding
+    
     static Font LoadDebugFont()
     {
         Font f = Raylib.LoadFontEx("assets/debug.ttf", 64, null, 0);
@@ -40,7 +51,12 @@ public static class ObjectManager
         AllObjects.Add(obj);
         drawList.Add(obj);
         obj.Start();
-        if (obj.IsSolid) Solids.Add(obj);
+        if (obj.IsSolid)
+        {
+            Solids.Add(obj);
+            if (obj.CanMove) DynamicSolids.Add(obj);
+            else staticGrid.Insert(obj);
+        }
         if (obj is CameraZone cz) CameraZones.Add(cz);
         if (obj is SemiSolidRect) SemiSolids.Add(obj);
         if (obj.DebugColor == default) obj.DebugColor = Color.Blue;
@@ -95,6 +111,9 @@ public static class ObjectManager
         CameraZones.Clear();
         SemiSolids.Clear();
         drawList.Clear();
+        DynamicSolids.Clear();
+        staticGrid.Clear();
+        frameGrid.Clear();
     }
 
     static void Step(GameObject entity, float MoveX, float MoveY)
@@ -103,7 +122,7 @@ public static class ObjectManager
         entity.Position.X += MoveX;
         Rectangle boxX = entity.BoundingBox; //snapshot of where we are after moving
 
-        foreach(var solid  in Solids)
+        foreach(var solid  in nearby)
         {
             if(!IsBlocking(entity, solid)) continue;
 
@@ -125,7 +144,7 @@ public static class ObjectManager
         entity.Position.Y += MoveY;
         Rectangle boxY = entity.BoundingBox; //snapshot of where we are after moving
 
-        foreach (var solid in Solids)
+        foreach (var solid in nearby)
         {
             if (!IsBlocking(entity, solid)) continue;
 
@@ -178,7 +197,7 @@ public static class ObjectManager
         //local bools rather than refs because simpler
         bool grounded = false, wallLeft = false, wallRight = false;
 
-        foreach(var solid in Solids)
+        foreach(var solid in nearby)
         {
             //you cant be grounded on someting that isnt solid, ect
             if (!IsBlocking(entity, solid)) continue;
@@ -229,7 +248,11 @@ public static class ObjectManager
             if (!obj.Active)
             {
                 drawListNeedsPurge = true;
-                if (obj.IsSolid) Solids.Remove(obj);
+                if (obj.IsSolid)
+                {
+                    Solids.Remove(obj);
+                    if (obj.CanMove) DynamicSolids.Remove(obj);
+                }
                 if (obj is CameraZone cz2) CameraZones.Remove(cz2);
                 if (obj is SemiSolidRect) SemiSolids.Remove(obj);
                 AllObjects.RemoveAt(i);
@@ -242,28 +265,19 @@ public static class ObjectManager
 
             if (obj.CanMove)
             {
-                //bool grounded = false;
-                //bool wallLeft = false;
-                //bool wallRight = false;
-
-                ////dt shit
-                //float stepX = obj.Velocity.X * deltaTime * 60.0f;
-                //float stepY = obj.Velocity.Y * deltaTime * 60.0f;
-
-                //int steps = Math.Max(1, (int)MathF.Ceiling(Math.Max(MathF.Abs(stepX), MathF.Abs(stepY)) / 4f));
-                //for(int s = 0; s < steps; s++)
-                //{
-                //    MoveAndCollide(obj, stepX / steps, stepY / steps, ref grounded, ref wallLeft, ref wallRight);
-                //}
-
-                ////MoveAndCollide(obj, obj.Velocity.X, obj.Velocity.Y, ref grounded, ref wallLeft, ref wallRight);
-                //obj.IsGrounded = grounded;
-                //obj.IsTouchingWallLeft = wallLeft;
-                //obj.IsTouchingWallRight = wallRight;
-
                 float stepX = obj.Velocity.X * deltaTime * 60.0f;
                 float stepY = obj.Velocity.Y * deltaTime * 60.0f;
 
+                //region the entity could touch this frame-- its collider grown by velocity + 2
+                Rectangle b = obj.BoundingBox;
+                float dx = MathF.Abs(stepX) + 2, dy = MathF.Abs(stepY) + 2;
+                Rectangle region = new  Rectangle(b.X - dx, b.Y - dy, b.Width + dx * 2, b.Height + dy * 2);
+                
+                //ask the grid what objects are near
+                nearby.Clear();
+                staticGrid.Query(region, nearby);
+                nearby.AddRange(DynamicSolids);
+                
                 int steps = Math.Max(1, (int)MathF.Ceiling(Math.Max(MathF.Abs(stepX), MathF.Abs(stepY)) / 4f));
 
                 for(int s = 0; s < steps; s++)
@@ -275,31 +289,10 @@ public static class ObjectManager
             } 
 
         }
-
-        //additional pass in order for objects to "know" what all they are collidion with
-
-        //foreach(var obj in AllObjects)
-        //{
-        //    obj.CurrentlyColliding.Clear();
-        //}
-
-        //for(int i = 0; i < AllObjects.Count; i++)
-        //{
-        //    var a = AllObjects[i];
-        //    if (!a.Active) continue;
-
-        //for (int j = i + 1; j < AllObjects.Count; j++)
-        //{
-        //    var b = AllObjects[j];
-        //    if (!b.Active) continue;
-
-        //    if (Raylib.CheckCollisionRecs(a.BoundingBox, b.BoundingBox))
-        //    {
-        //        a.CurrentlyColliding.Add(b);
-        //        b.CurrentlyColliding.Add(a);
-        //    }
-        //}
-        //}
+        
+        frameGrid.Clear();
+        for(int i = 0; i < AllObjects.Count; i++)
+            if(AllObjects[i].Active) frameGrid.Insert(AllObjects[i]);
 
         for (int i = 0; i < AllObjects.Count; i++)
         {
@@ -310,17 +303,30 @@ public static class ObjectManager
             if (!a.Active || !a.TracksCollisions) continue;
 
             Rectangle aBox = a.BoundingBox; //cache it
+            
+            queryBuffer.Clear();
+            frameGrid.Query(aBox, queryBuffer);
 
-            for (int j = 0; j < AllObjects.Count; j++)
+            foreach (var b in queryBuffer)
             {
-                var b = AllObjects[j];
                 if (!b.Active || b == a) continue;
-
-                if (Raylib.CheckCollisionRecs(aBox, b.BoundingBox))
+                
+                if (Raylib.CheckCollisionRecs(aBox, b.BoundingBox) && !a.CurrentlyColliding.Contains(b))
                 {
                     a.CurrentlyColliding.Add(b);
                 }
             }
+
+            //for (int j = 0; j < AllObjects.Count; j++)
+            //{
+            //    var b = AllObjects[j];
+            //    if (!b.Active || b == a) continue;
+//
+            //    if (Raylib.CheckCollisionRecs(aBox, b.BoundingBox))
+            //    {
+            //        a.CurrentlyColliding.Add(b);
+            //    }
+            //}
         }
     }
 
@@ -390,6 +396,8 @@ public static class ObjectManager
                 Raylib.DrawRectangleLinesEx(debugRect, LineThick, obj.DebugColor);
             }
         }
+        
+        DrawGrid2D(64, 64, cameraView, 0.25f);
 
         //second loop-- only text labels
         if (Program.DebugText)
@@ -403,8 +411,8 @@ public static class ObjectManager
 
                 //camera zones get extra info, but everything else gets generalized becuase im hella racist
                 string label = textobj is CameraZone camz ? $"{textobj.GetType()}\n" +
-                    $"size: {textobj.ColliderSize}" +
-                    $"borders: {camz.BorderX}, {camz.BorderY}\n" +
+                    $"size: {textobj.ColliderSize}\n" +
+                    $"border?: {camz.BorderX}, {camz.BorderY}\n" +
                     $"offsets: {camz.Offset}"
                     : 
                     $"{textobj.GetType()}\n" +
@@ -421,5 +429,43 @@ public static class ObjectManager
         return solid != entity
             && solid.Active
             && (entity.BlockedBy & solid.Layer) != 0;
+    }
+
+    public static void DrawGrid2D(float w, float h, Rectangle cameraView, float lineThick)
+    {
+        if (w <= 0.0f || h <= 0.0f) return;
+        
+        float right = cameraView.X + cameraView.Width;
+        float bottom = cameraView.Y + cameraView.Height;
+        
+        int firstCol = (int)MathF.Floor(cameraView.X / w);
+        int lastCol = (int)MathF.Ceiling(right / w);
+        int firstRow = (int)MathF.Floor(cameraView.Y / h);
+        int lastRow = (int)MathF.Ceiling(bottom / h);
+
+        for (int col = firstCol; col < lastCol; col++)
+        {
+            float x = col * w;
+            Raylib.DrawLineEx(
+                new Vector2(x, cameraView.Y),
+                new Vector2(x, bottom),
+                lineThick,
+                Color.LightGray
+                );
+        }
+
+        for (int row = firstRow; row < lastRow; row++)
+        {
+            float y = row * h;
+            Raylib.DrawLineEx(
+                new Vector2(cameraView.X, y),
+                new Vector2(right, y),
+                lineThick,
+                Color.LightGray
+            );
+        }
+        
+        
+
     }
 }

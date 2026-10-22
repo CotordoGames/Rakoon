@@ -67,7 +67,7 @@ class Program
 
         if (args.Length == 0)
         {
-            LoadRoom("assets/levels/TestLDTK3", spawnAtDoorId: null);
+            LoadRoom("assets/levels/MoveGym", spawnAtDoorId: null);
         }
         else
         {
@@ -89,25 +89,25 @@ class Program
             if (Raylib.IsKeyPressed(KeyboardKey.F1)) Debug = !Debug;
 
             //draw overlay?
-            if( Raylib.IsKeyPressed(KeyboardKey.F2)) DebugOverlay = !DebugOverlay;
+            if(Debug && Raylib.IsKeyPressed(KeyboardKey.F2)) DebugOverlay = !DebugOverlay;
 
             //draw text?
-            if (Raylib.IsKeyPressed(KeyboardKey.F3)) DebugText = !DebugText;
+            if (Debug && Raylib.IsKeyPressed(KeyboardKey.F3)) DebugText = !DebugText;
 
             //draw zones?
-            if (Raylib.IsKeyPressed(KeyboardKey.F4)) DebugCameraZones = !DebugCameraZones;
+            if (Debug && Raylib.IsKeyPressed(KeyboardKey.F4)) DebugCameraZones = !DebugCameraZones;
 
             //draw layer 1?
-            if (Raylib.IsKeyPressed(KeyboardKey.F5)) DrawLayerOne = !DrawLayerOne;
+            if (Debug && Raylib.IsKeyPressed(KeyboardKey.One)) DrawLayerOne = !DrawLayerOne;
 
             //draw layer 2?
-            if (Raylib.IsKeyPressed(KeyboardKey.F6)) DrawLayerTwo = !DrawLayerTwo;
+            if (Debug && Raylib.IsKeyPressed(KeyboardKey.Two)) DrawLayerTwo = !DrawLayerTwo;
 
             //draw objects?
-            if (Raylib.IsKeyPressed(KeyboardKey.F7)) DrawObjects = !DrawObjects;
+            if (Debug && Raylib.IsKeyPressed(KeyboardKey.Three)) DrawObjects = !DrawObjects;
 
-            //draw objects?
-            if (Raylib.IsKeyPressed(KeyboardKey.F8)) DrawBackground = !DrawBackground;
+            //draw bg?
+            if (Debug && Raylib.IsKeyPressed(KeyboardKey.Zero)) DrawBackground = !DrawBackground;
 
             if (Raylib.IsKeyPressed(KeyboardKey.P))
             {
@@ -241,7 +241,7 @@ class Program
             Raylib.BeginScissorMode((int)screen.DestRect.X, (int)screen.DestRect.Y, (int)screen.DestRect.Width, (int)screen.DestRect.Height);
 
             Raylib.BeginMode2D(dbgCam);
-            ObjectManager.DrawDebugWorld(currentCameraView, 2f / dbgCam.Zoom);
+            ObjectManager.DrawDebugWorld(currentCameraView, 3.0f / dbgCam.Zoom);
             Raylib.EndMode2D();
 
             Raylib.EndScissorMode();
