@@ -14,12 +14,14 @@ public class Spring : GameObject
     static bool TextureLoaded = false;
 
     public static bool mboing = false;
+
+    public AnimatedSprite2D? anim;
     public override void Start()
     {
         Size = new Vector2(8, 8);
-        ColliderSize = new Vector2(12, 4);
-        ColliderOffset = new Vector2(-2, 4);
-        IsSolid = false;
+        ColliderSize = new Vector2(8, 4);
+        ColliderOffset = new Vector2(0, 4);
+        IsSolid = true;
 
         if (!TextureLoaded)
         {
@@ -29,7 +31,7 @@ public class Spring : GameObject
 
         Graphic = new AnimatedSprite2D(texture, 8, 8);
 
-        var anim = (AnimatedSprite2D)Graphic;
+        anim = (AnimatedSprite2D)Graphic;
 
         anim.AddAnimation("default", [0], 1, loop: true);
         anim.AddAnimation("bounce", [ 1, 2, 3, 0], 0.075f, loop: false);
@@ -40,7 +42,6 @@ public class Spring : GameObject
 
     public override void Update(float deltaTime)
     {
-        var anim = (AnimatedSprite2D?)Graphic;
         foreach (var obj in CurrentlyColliding)
         {
             if(obj is Autumn)

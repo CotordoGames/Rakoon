@@ -241,7 +241,7 @@ class Program
             Raylib.BeginScissorMode((int)screen.DestRect.X, (int)screen.DestRect.Y, (int)screen.DestRect.Width, (int)screen.DestRect.Height);
 
             Raylib.BeginMode2D(dbgCam);
-            ObjectManager.DrawDebugWorld(currentCameraView, 3.0f / dbgCam.Zoom);
+            ObjectManager.DrawDebugWorld(currentCameraView, 2.0f / dbgCam.Zoom);
             Raylib.EndMode2D();
 
             Raylib.EndScissorMode();

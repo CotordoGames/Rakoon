@@ -196,6 +196,7 @@ public static class ObjectManager
 
         //local bools rather than refs because simpler
         bool grounded = false, wallLeft = false, wallRight = false;
+        GameObject? ground = null, left = null, right = null;
 
         foreach(var solid in nearby)
         {
@@ -205,13 +206,13 @@ public static class ObjectManager
             Rectangle sb = solid.BoundingBox;
 
             //after a probe finds something, no need to check any more for that condition
-            if (!grounded && Raylib.CheckCollisionRecs(groundProbe, sb)) grounded = true;
-            if (!wallLeft && Raylib.CheckCollisionRecs(wallProbeLeft, sb)) wallLeft = true;
-            if (!wallRight && Raylib.CheckCollisionRecs(wallProbeRight, sb)) wallRight = true;
+            if (ground == null && Raylib.CheckCollisionRecs(groundProbe, sb)) ground = solid;
+            if (left == null && Raylib.CheckCollisionRecs(wallProbeLeft, sb)) left = solid;
+            if (right == null && Raylib.CheckCollisionRecs(wallProbeRight, sb)) right = solid;
 
 
             //nothing left to find
-            if (grounded && wallLeft && wallRight) break;
+            if (ground != null && left != null && right != null) break;
         }
 
         //semisolids
@@ -223,17 +224,20 @@ public static class ObjectManager
 
                 if(Raylib.CheckCollisionRecs(groundProbe, semi.BoundingBox) && groundProbe.Y + groundProbe.Height > semi.BoundingBox.Y)
                 {
-                    grounded = true;
+                    ground = semi;
                     break; //one is all it takes
                 }
             }
         }
 
+        entity.GroundObject = ground;
+        entity.WallLeftObject = left;
+        entity.WallRightObject = right;
 
         //pass results to entity
-        entity.IsGrounded = grounded;
-        entity.IsTouchingWallLeft = wallLeft;
-        entity.IsTouchingWallRight = wallRight;
+        entity.IsGrounded = ground != null;
+        entity.IsTouchingWallLeft = left != null;
+        entity.IsTouchingWallRight = right != null;
     }
 
 
@@ -316,17 +320,6 @@ public static class ObjectManager
                     a.CurrentlyColliding.Add(b);
                 }
             }
-
-            //for (int j = 0; j < AllObjects.Count; j++)
-            //{
-            //    var b = AllObjects[j];
-            //    if (!b.Active || b == a) continue;
-//
-            //    if (Raylib.CheckCollisionRecs(aBox, b.BoundingBox))
-            //    {
-            //        a.CurrentlyColliding.Add(b);
-            //    }
-            //}
         }
     }
 

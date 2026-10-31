@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-class AnimatedSprite2D : Drawable
+public class AnimatedSprite2D : Drawable
 {
     //define basic and/or required variables
     public Texture2D Texture;

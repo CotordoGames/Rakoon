@@ -256,8 +256,8 @@ public static class DialogueManager
         TextBoxRect.Y = box.Y + (box.H - TextBoxRect.Height) / 2;
 
         //draw the box itself(and the outline)
-        Raylib.DrawRectangleRec(TextBoxRect, new Color((byte)50, (byte)45, (byte)77, (byte)192));
-        Raylib.DrawRectangleLinesEx(TextBoxRect, 1.0f, new Color((byte)71, (byte)67, (byte)148, (byte)255));
+        Raylib.DrawRectangleRec(TextBoxRect, new Color((byte)25, (byte)16, (byte)35, (byte)192));
+        Raylib.DrawRectangleLinesEx(TextBoxRect, 1.0f, new Color((byte)50, (byte)45, (byte)77, (byte)255));
         if (progress < 1f) return;
 
         //set up values for the portrait and text drawing

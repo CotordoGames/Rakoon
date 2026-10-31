@@ -37,7 +37,7 @@ public class Autumn : GameObject
     public float DashTimer = DashCoolDown;
 
     //wall jump
-    public const float WallSlideMaxSpeed = 1.0f;
+    public const float WallSlideMaxSpeed = 1.36f;
     public Vector2 WallJumpForce = new Vector2(3.0f, 5.0f);
     public const float WallJumpLockDuration = 0.15f;
     float wallJumpLockTimer = 0f;
@@ -119,8 +119,8 @@ public class Autumn : GameObject
 
             //tailored to autumn
             Size = new Vector2(16, 16);
-            ColliderSize = new Vector2(8, 13);
-            ColliderOffset = new Vector2(4, 3);
+            ColliderSize = new Vector2(8, 12);
+            ColliderOffset = new Vector2(4, 4);
 
             //set the graphic to the texture
             Graphic = new AnimatedSprite2D(texture, 16, 16);
@@ -221,31 +221,33 @@ public class Autumn : GameObject
         //update the current state to change how the players values get update this frame
         DetermineState(directionX, onLadder);
 
-        foreach (var obj in CurrentlyColliding)
+        if(GroundObject is Spring spring && state != PlayerState.dash)
         {
-            if (obj is Spring && state != PlayerState.dash)
+            Program.audio.PlayOneShot("spring");
+            spring.anim.Play("bounce");
+            if (Raylib.IsKeyDown(EngineInit.Config.Jump))
             {
-                var spring = (Spring)obj;
-                Program.audio.PlayOneShot("spring");
-                if (Raylib.IsKeyDown(EngineInit.Config.Jump))
-                {
-                    Velocity.Y = -spring.BounceHeight * 1.25f;
-                }
-                else
-                {
-                    Velocity.Y = -spring.BounceHeight;
-                }
+                Velocity.Y = -spring.BounceHeight * 1.25f;
             }
-            if (obj is Enemy e)
+            else
+            {
+                Velocity.Y = -spring.BounceHeight;
+            }
+        }
+
+        if(WallLeftObject is Enemy eL || WallRightObject is Enemy eR)
+        {
+
+            if(state == PlayerState.dash)
             {
                 if (state == PlayerState.dash)
                 {
-                    if(e.DamageCoolDownTimer <= 0) e.health.TakeDamage(5);
+                    //if (eL.DamageCoolDownTimer <= 0) eL.health.TakeDamage(5);
                 }
-                else if(hurtCooldownTimer <= 0)
+                else if (hurtCooldownTimer <= 0)
                 {
                     health?.TakeDamage(4);
-                    Velocity = new Vector2(e.direction * e.knockback, -4);
+                    //Velocity = new Vector2(eL.direction * eL.knockback, -4);
                     hurtCooldownTimer = HurtCooldown;
                 }
             }

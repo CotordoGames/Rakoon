@@ -17,9 +17,14 @@ public abstract class GameObject
     public bool IsTouchingWallLeft = false;
     public bool IsTouchingWallRight = false;
     public bool TracksCollisions = true;
-    public List<GameObject> CurrentlyColliding = new List<GameObject>();
-    public List<Component> Components = new List<Component>();
+    public List<GameObject>? CurrentlyColliding = new List<GameObject>();
+    public List<Component>? Components = new List<Component>();
     public int DrawOrder = 0;
+
+    //what object is it resting against
+    public GameObject? GroundObject;
+    public GameObject? WallLeftObject;
+    public GameObject? WallRightObject;
 
     public uint Layer = 1;
     public uint BlockedBy = ~0u;
@@ -74,7 +79,7 @@ public abstract class GameObject
 
     public void UpdateComponents(float deltaTime)
     {
-        for(int i = 0; i < Components.Count; i++)
+        for(int i = 0; i < Components?.Count; i++)
         {
             Components[i].Update(deltaTime);
         }
